@@ -1,34 +1,41 @@
 @import url("variables.css");
 
+* {
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   font-family: var(--font-family);
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   flex-direction: column;
   align-items: center;
   height: 100vh;
   background-color: var(--grey-color);
   margin: 0;
-  width: 100%;
 }
 
 #auth-container {
   display: flex;
-  justify-content: space-between; /* Keeps form & auth-box side by side */
   align-items: center;
+  flex-wrap: wrap;
   gap: 20px;
-  max-width: 950px;
   width: 100%;
+  justify-content: center;
+  padding: 0 20px;
 }
 
-.auth-box, #signin-form, #signup-form {
-    background: var(--white-color);
-    padding: var(--padding-large);
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-    width: 50%; /* Ensures equal width */
-    max-width: 400px; /* Prevents it from stretching */
-    text-align: center;
+.auth-box,
+#signin-form,
+#signup-form {
+  background: var(--white-color);
+  padding: var(--padding-large);
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
 }
 
 #signin-form,
@@ -65,10 +72,12 @@ label {
 
 input {
   width: 100%;
-  padding: var(--padding-small);
   border: 1px solid var(--ash-border-color);
   border-radius: 5px;
   margin-top: var(--margin-small);
+  padding: 10px;
+  height: 40px;
+  font-size: 1rem;
 }
 
 .signin-btn,
@@ -96,7 +105,6 @@ input {
   background-color: var(--white-color);
   color: var(--primary-color);
   border: 1px solid var(--primary-color);
-  /* border: none; */
   margin-top: var(--margin-small);
   cursor: pointer;
   font-size: var(--font-size-medium);
@@ -108,20 +116,27 @@ input {
   background-color: var(--primary-color);
   color: var(--white-color);
 }
-#header, #footer{
-    width: 100%;
+
+#header,
+#footer {
+  width: 100%;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  #auth-container {
-    flex-direction: column;
-    align-items: center;
-  }
 
+@media (max-width: 480px) {
+  #auth-container {
+    padding: 20px;
+  }
   .auth-box,
   #signin-form,
   #signup-form {
-    width: 90%;
+    padding: var(--padding-small) var(--padding-medium);
+  }
+
+  input,
+  .signin-btn,
+  .signup-btn,
+  .secondary-btn {
+    font-size: 0.9rem;
   }
 }
