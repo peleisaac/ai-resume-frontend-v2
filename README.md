@@ -35,3 +35,10 @@ The AI Resume Application is a web-based project built using HTML, CSS and JavaS
 
 3. **Open the project in a browser**: Simply open index.html in your preferred browser
 
+## Validator Testing
+    ### Project Validation from the Official W3C Validator
+   ![Screenshot of the Official W3C Validator](https://github.com/peleisaac/best-value-project-one/blob/main/assets/images/w3CValidator.png)
+   
+    ### Project Validation from the Official Jigsaw Validator
+   ![Screenshot of the Official Jigsaw Validator](https://github.com/peleisaac/best-value-project-one/blob/main/assets/images/jigsawValidator.png)
+
