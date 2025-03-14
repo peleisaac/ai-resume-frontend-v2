@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         console.log("Sending login request with data:", data);
 
-        fetch("https://ai-resume-backend.axxendcorp.com/api/v1/login", {
+        fetch(`https://ai-resume-backend.axxendcorp.com/api/v1/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
