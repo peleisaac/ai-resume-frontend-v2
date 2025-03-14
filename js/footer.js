@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (footerContainer) {
         footerContainer.innerHTML = `
             <footer class="footer">
-                <div class="container">
+                <div class="footer-container">
                     <p>&copy; 2025 AI Resume Screening Application</p>
                 </div>
             </footer>
