@@ -8,34 +8,48 @@ document.addEventListener("DOMContentLoaded", function () {
     let buttons = "";
 
     if (role === "jobseeker") {
-        // Show only the Employer button
-        buttons = `<button class="btn danger" onclick="location.href='employers-signin.html'">Employers</button>`;
+        buttons = `<button class="btn danger" onclick="location.href='/pages/employers-signin.html'">Employers</button>`;
     } else if (role === "employer") {
-        // Show only the Jobseeker button
-        buttons = `<button class="btn danger" onclick="location.href='jobseekers-signin.html'">Jobseekers</button>`;
+        buttons = `<button class="btn danger" onclick="location.href='/pages/jobseekers-signin.html'">Jobseekers</button>`;
     } else {
-        // Landing page: Show both
         buttons = `
-            <button class="btn secondary-white" onclick="location.href='/ai-resume-frontend-v2/pages/jobseekers-signin.html'">Jobseekers</button>
-            <button class="btn danger" onclick="location.href='/ai-resume-frontend-v2/pages/employers-signin.html'">Employers</button>
+            <button class="btn secondary-white" onclick="location.href='/pages/jobseekers-signin.html'">Jobseekers</button>
+            <button class="btn danger" onclick="location.href='/pages/employers-signin.html'">Employers</button>
         `;
     }
 
     // Inject Header
     headerContainer.innerHTML = `
         <header class="header">
-            <div class="container">
+            <div class="head-container">
                 <h1 class="logo">
-                    <a href="/ai-resume-frontend-v2/">AI Resume Screening</a>
+                    <a href="/index.html">AI Resume Screening</a>
                 </h1>
+                <button class="menu-btn" id="menu-btn">☰</button>
                 <nav>
-                    <ul class="nav-links">
-                        <li><a href="jobs.html">Jobs</a></li>
-                        <li><a href="contact.html">Contact Us</a></li>
+                    <ul class="nav-links" id="nav-links">
+                        <li><a href="/pages/jobs.html">Jobs</a></li>
+                        <li><a href="/pages/contact.html">Contact Us</a></li>
                         ${buttons}
                     </ul>
                 </nav>
             </div>
         </header>
     `;
+
+    // Toggle mobile menu
+    const menuBtn = document.getElementById("menu-btn");
+    const navLinks = document.getElementById("nav-links");
+
+    menuBtn.addEventListener("click", function (event) {
+        event.stopPropagation(); // Prevents this click from triggering the document click event
+        navLinks.classList.toggle("active");
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener("click", function (event) {
+        if (!navLinks.contains(event.target) && !menuBtn.contains(event.target)) {
+            navLinks.classList.remove("active");
+        }
+    });
 });
