@@ -1,7 +1,7 @@
 # AI Resume frontend
 The AI Resume Application is a web-based project built using HTML, CSS and JavaScript. It provides an intuitive user interface to upload, view, and manage resumes according to skills, interest and strength. The application ensures a visually appealing and responsive layout, making it easy for users to interact with their resumes.
 
-![Screenshot of the Landing page] (https://github.com/peleisaac/ai-resume-frontend-v2/blob/main/assets/landing-page-image.png)
+![Screenshot of the Landing page](https://github.com/peleisaac/ai-resume-frontend-v2/blob/main/assets/landing-page-image.png)
 
 ## Table of Contents
 
