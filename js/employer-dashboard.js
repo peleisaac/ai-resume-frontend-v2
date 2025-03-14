@@ -37,7 +37,7 @@ function loadSidebar() {
     <nav class="dashboard-nav">
         <ul>
             <li>
-                <a href="/ai-resume-frontend/pages/employer-dashboard.html" class="nav-item">
+                <a href="/ai-resume-frontend-v2/pages/employer-dashboard.html" class="nav-item">
                     <span class="icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" />
@@ -50,7 +50,7 @@ function loadSidebar() {
                 </a>
             </li>
             <li>
-                <a href="/ai-resume-frontend/pages/employer-new-job.html" class="nav-item active">
+                <a href="/ai-resume-frontend-v2/pages/employer-new-job.html" class="nav-item active">
                     <span class="icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -61,7 +61,7 @@ function loadSidebar() {
                 </a>
             </li>
             <li>
-                <a href="/ai-resume-frontend/pages/employer-job-listings.html" class="nav-item">
+                <a href="/ai-resume-frontend-v2/pages/employer-job-listings.html" class="nav-item">
                     <span class="icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
