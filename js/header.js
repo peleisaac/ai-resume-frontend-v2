@@ -16,8 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
         // Landing page: Show both
         buttons = `
-            <button class="btn secondary-white" onclick="location.href='/ai-resume-frontend/pages/jobseekers-signin.html'">Jobseekers</button>
-            <button class="btn danger" onclick="location.href='/ai-resume-frontend/pages/employers-signin.html'">Employers</button>
+            <button class="btn secondary-white" onclick="location.href='/ai-resume-frontend-v2/pages/jobseekers-signin.html'">Jobseekers</button>
+            <button class="btn danger" onclick="location.href='/ai-resume-frontend-v2/pages/employers-signin.html'">Employers</button>
         `;
     }
 
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <header class="header">
             <div class="container">
                 <h1 class="logo">
-                    <a href="/ai-resume-frontend/">AI Resume Screening</a>
+                    <a href="/ai-resume-frontend-v2/">AI Resume Screening</a>
                 </h1>
                 <nav>
                     <ul class="nav-links">
