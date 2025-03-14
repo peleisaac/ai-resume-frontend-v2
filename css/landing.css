@@ -1,28 +1,30 @@
 @import url('variables.css');
 
-html, body {
+*{
     padding: 0;
-    margin: 0;
     box-sizing: border-box;
-    height: 100%;
+    font-family: var(--font-family);
+}
+body {
+    margin: 0;
+    height: 100vh;
     display: flex;
     flex-direction: column; /* Stack elements vertically */
-    font-family: var(--font-family);
+    justify-content: space-between;
 }
 
 
 .landing {
-    flex-grow: 1;
     background-color: var(--grey-color);
     display: flex;
     justify-content: center;
+    flex-grow: 1;
     align-items: center;
     padding: 3rem 1rem;
 }
 
-.container {
+.landing_container {
     display: flex;
-    flex-direction: column;
     gap: 2rem;
     max-width: 1200px;
     width: 100%;
@@ -68,18 +70,13 @@ html, body {
 }
 
 /* Responsive Design */
-@media (min-width: 768px) {
-    .container {
-        flex-direction: row;
+@media (max-width: 768px) {
+    .landing_container {
+        flex-direction: column;
         text-align: left;
-    }
-    
-    .text-content {
-        width: 45%;
     }
 
     .image-content {
-        width: 55%;
         display: flex;
         justify-content: flex-end;
     }
