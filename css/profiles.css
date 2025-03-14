@@ -8,6 +8,7 @@ body {
     align-items: center; 
     justify-content: space-between; 
     background-color: var(--ash-color);
+    font-family: var(--font-family);
 }
 
 .profile_container {
