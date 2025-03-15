@@ -28,8 +28,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 <button class="menu-btn" id="menu-btn">☰</button>
                 <nav>
                     <ul class="nav-links" id="nav-links">
-                        <li><a href="jobs.html">Jobs</a></li>
-                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="/pages/jobs.html">Jobs</a></li>
+                        <li><a href="/pages/contact.html">Contact Us</a></li>
                         ${buttons}
                     </ul>
                 </nav>
