@@ -133,19 +133,35 @@ function setupSidebarNavigation() {
 function setupLogoutButton() {
     const logoutBtn = document.getElementById("logout-btn");
     if (logoutBtn) {
-        logoutBtn.addEventListener("click", function(event) {
+        logoutBtn.addEventListener("click", function (event) {
             event.preventDefault();
             
-            // Clear user data from localStorage
-            localStorage.removeItem("user");
-            
-            // Redirect to login page
-            window.location.href = "jobseekers-signin.html";
-            
-            console.log("User logged out successfully");
+            // Disable button and show loader
+            logoutBtn.innerHTML = `
+                <span class="icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" opacity="0.5"/>
+                        <path d="M12 2 A10 10 0 0 1 22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </span>
+                <span>Logging out...</span>
+            `;
+            logoutBtn.classList.add("loading");
+            logoutBtn.disabled = true; // Prevent multiple clicks
+
+            setTimeout(() => {
+                // Clear user data from localStorage
+                localStorage.removeItem("user");
+
+                // Redirect to login page
+                window.location.href = "../pages/jobseekers-signin.html";
+
+                console.log("User logged out successfully");
+            }, 2000); // Simulate a small delay before redirecting
         });
     }
 }
+
 function loadContent(page) {
     // This fetches the HTML for the page
     fetch(page)
