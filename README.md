@@ -27,12 +27,12 @@ The AI Resume Application is a web-based project built using HTML, CSS and JavaS
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/peleisaac/ai-resume-frontend.git
+   git clone https://github.com/peleisaac/ai-resume-frontend-v2.git
    ```
 
 2. **Navigate to the project folder**
   ```bash
-  cd ai-resume-frontend
+  cd ai-resume-frontend-v2
   ```
 
 3. **Open the project in a browser**: Simply open index.html in your preferred browser
