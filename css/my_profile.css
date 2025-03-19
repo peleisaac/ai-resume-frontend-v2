@@ -1,16 +1,13 @@
 
 .profile_container {
     background: var(--white-color);
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
-    justify-content: center; 
     width: 100%;
     gap: 0.9375rem;
-    padding: 1.875rem;
+    padding: 2rem 4rem;
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     margin-top: 2rem;
+    box-sizing: border-box;
 }
 
 /* Ensures form rows space out */
@@ -19,10 +16,12 @@
     justify-content: space-between;
     gap: 10px;
     width: 100%;
+    flex-wrap: wrap;
 }
 
 .row > div {
     flex: 1;
+    min-width: 250px;
 }
 
 h2 {
@@ -39,6 +38,7 @@ p {
 label {
     font-weight: bold;
     margin-top: 10px;
+    display: block;
 }
 
 input, select, textarea {
@@ -47,11 +47,14 @@ input, select, textarea {
     margin: 5px 0 15px 0;
     border: 1px solid var(--ash-border-color);
     border-radius: 5px;
-    box-sizing: border-box; /* Prevents width issues */
+    box-sizing: border-box; 
+    max-width: 100%; 
+    font-size: 16px;
 }
 
 textarea {
     height: 9.375rem;
+    resize: vertical;
 }
 
 /* Button styles */
@@ -83,7 +86,8 @@ button:hover {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust width */
     gap: 15px 40px; 
     align-items: center;
-    max-width: 800px;
+    max-width: 100%;
+    width: 100%;
 }
 
 .category-item {
@@ -117,5 +121,3 @@ button:hover {
     margin: 0;
     vertical-align: middle;
 }
-
-
