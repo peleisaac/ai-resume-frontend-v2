@@ -37,7 +37,7 @@ function loadSidebar() {
     <nav class="dashboard-nav">
         <ul>
             <li>
-                <a href="/ai-resume-frontend-v2/pages/employer-dashboard.html" class="nav-item">
+                <a href="/pages/employer-dashboard.html" class="nav-item">
                     <span class="icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" />
@@ -50,7 +50,7 @@ function loadSidebar() {
                 </a>
             </li>
             <li>
-                <a href="/ai-resume-frontend-v2/pages/employer-new-job.html" class="nav-item active">
+                <a href="/pages/employer-new-job.html" class="nav-item active">
                     <span class="icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -61,7 +61,7 @@ function loadSidebar() {
                 </a>
             </li>
             <li>
-                <a href="/ai-resume-frontend-v2/pages/employer-job-listings.html" class="nav-item">
+                <a href="/pages/employer-job-listings.html" class="nav-item">
                     <span class="icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -112,16 +112,17 @@ async function fetchUserDetails() {
 
     // First, try to update from localStorage
     if (user) {
-        nameElement.textContent = user.company_name || "Unknown";
-        roleElement.textContent = user.user_role || "Unknown";
+        nameElement.textContent = user.company_name || "John Doe";
+        roleElement.textContent = user.user_role || "Employer";
     }
 
     // If user data is missing or incomplete, fetch from API
     if (!user || !user.user_id || !user.token) {
         console.warn("User not found in localStorage. Redirecting to login...");
-        window.location.href = "/ai-resume-frontend/pages/jobseeker-signin.html"; // Redirect if user is missing
+        window.location.href = "../pages/employers-signin.html"; // Redirect if user is missing
         return;
     }
+
 }
 
 
@@ -129,15 +130,15 @@ async function fetchUserDetails() {
 function setupLogoutButton() {
     const logoutBtn = document.getElementById("logout-btn");
     if (logoutBtn) {
-        logoutBtn.addEventListener("click", function(event) {
+        logoutBtn.addEventListener("click", function (event) {
             event.preventDefault();
-            
+
             // Clear user data from localStorage
             localStorage.removeItem("user");
-            
+
             // Redirect to login page
-            window.location.href = "/ai-resume-frontend-v2/pages/employers-signin.html";
-            
+            window.location.href = "employers-signin.html";
+
             console.log("User logged out successfully");
         });
     }
@@ -177,6 +178,39 @@ function loadContent(page) {
         .catch(error => console.error("Error loading content:", error));
 }
 
+// Add this function to employer-dashboard.js
+function fetchDashboardMetrics() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user || !user.token) {
+        console.error("User not logged in or token missing");
+        return;
+    }
+
+    fetch(`https://ai-resume-backend.axxendcorp.com/api/v1/employer/dashboard-metrics`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": `Token ${user.token}`
+        },
+        body: JSON.stringify({ "employer_id": user.user_id }),
+        mode: "cors"
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Fetched metrics:", data);
+
+            const appliedJobsElement = document.querySelector(".metric-value.applied-jobs");
+            const activeJobsElement = document.querySelector(".metric-value.active-jobs");
+            const candidateElement = document.querySelector(".metric-value.candidate");
+
+            if (appliedJobsElement) appliedJobsElement.textContent = data.data.all_applications_count || 0;
+            if (activeJobsElement) activeJobsElement.textContent = data.data.active_jobs || 0;
+            if (candidateElement) candidateElement.textContent = data.data.qualified_candidates || 0; // Adjust this based on your API response
+        })
+        .catch(error => console.error("Error fetching metrics:", error));
+}
+
 function initializeCurrentPageContent() {
     // Setup job posting form for new job page
     // setupJobPostingForm();
@@ -185,6 +219,10 @@ function initializeCurrentPageContent() {
     if (window.location.pathname.includes("employer-job-listings.html")) {
         console.log("Initializing job listings page");
         initializeJobListings();
+    }
+    if (window.location.pathname.includes("employer-dashboard.html")) {
+        console.log("Welcome to Dashboard. reloading");
+        fetchDashboardMetrics();
     }
 }
 
@@ -237,13 +275,13 @@ function loadJobScripts() {
 }
 
 function highlightActiveLink() {
-    // Get the current path (e.g., "employer-new-job.html")
+    // Get the current path (e.g., "/pages/employer-new-job.html")
     const currentPath = window.location.pathname;
     const sidebarLinks = document.querySelectorAll(".nav-item");
 
     sidebarLinks.forEach(link => {
         link.classList.remove("active");
-        // Get the href value (e.g., "employer-new-job.html")
+        // Get the href value (e.g., "/pages/employer-new-job.html")
         const linkPath = link.getAttribute("href");
 
         // Check if the current path ends with or matches the link path
@@ -275,9 +313,9 @@ window.addEventListener('popstate', function () {
     const currentPath = window.location.pathname;
 
     // Only fetch if it's one of your application pages
-    if (currentPath.includes('/ai-resume-frontend/pages/employer-dashboard.html') ||
-        currentPath.includes('/ai-resume-frontend/pages/employer-new-job.html') ||
-        currentPath.includes('/ai-resume-frontend/pages/employer-job-listings.html')) {
+    if (currentPath.includes('employer-dashboard.html') ||
+        currentPath.includes('employer-new-job.html') ||
+        currentPath.includes('employer-job-listings.html')) {
 
         // Load the content for the current URL
         loadContent(currentPath);
