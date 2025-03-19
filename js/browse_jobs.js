@@ -1,352 +1,468 @@
-function initializeJobPage() {
-    // State variables
-    let allJobs = [];
-    let filteredJobs = [];
-    let currentPage = 1;
-    let jobsPerPage = 10;
-    let currentFilters = {
-        search: '',
-        location: '',
-        jobType: '',
-        experience: ''
-    };
 
-    // DOM elements
-    const jobsListElement = document.getElementById('jobs-list');
-    const jobCountElement = document.getElementById('job-count-number');
-    const prevPageButton = document.getElementById('prev-page');
-    const nextPageButton = document.getElementById('next-page');
-    const pageNumbersElement = document.getElementById('page-numbers');
-    const searchInput = document.getElementById('job-search');
-    const searchButton = document.getElementById('search-btn');
-    const locationFilter = document.getElementById('location');
-    const jobTypeFilter = document.getElementById('job-type');
-    const experienceFilter = document.getElementById('experience');
-    const filterButton = document.getElementById('filter-btn');
-    const jobModal = document.getElementById('job-modal');
-    const closeModalButton = document.querySelector('.close');
-    const jobDetailContent = document.getElementById('job-detail-content');
-    const applyButton = document.getElementById('apply-btn');
-    const saveJobButton = document.getElementById('save-job-btn');
+// State variables
+let allJobs = [];
+let filteredJobs = [];
+let currentPage = 1;
+const jobsPerPage = 10;
+let currentFilters = {
+    search: '',
+    location: '',
+    jobType: '',
+    experience: ''
+};
 
-    // Fetch jobs data
-    async function fetchJobs() {
-        try {
-            const response = await fetch(`../models/jobs.json?t=${new Date().getTime()}`, { cache: "no-store" });
-            if (!response.ok) {
-                throw new Error('Failed to fetch jobs data');
-            }
+// DOM elements
+const jobsListElement = document.getElementById('jobs-list');
+const jobCountElement = document.getElementById('job-count-number');
+const prevPageButton = document.getElementById('prev-page');
+const nextPageButton = document.getElementById('next-page');
+const pageNumbersElement = document.getElementById('page-numbers');
+const searchInput = document.getElementById('job-search');
+const searchButton = document.getElementById('search-btn');
+const locationFilter = document.getElementById('location');
+const jobTypeFilter = document.getElementById('job-type');
+const experienceFilter = document.getElementById('experience');
+const filterButton = document.getElementById('filter-btn');
+const jobModal = document.getElementById('job-modal');
+const applyButton = document.getElementById('apply-button');
+const saveJobButton = document.getElementById('save-job-button');
+const closeModalButton = document.querySelector('.close');
+const jobDetailContent = document.getElementById('job-detail-content');
 
-            allJobs = await response.json();
-            filteredJobs = [...allJobs];
 
-            console.log('Fetched jobs:', allJobs);
 
-            renderJobs();
-            renderPagination();
-        } catch (error) {
-            console.error('Error fetching jobs:', error);
-            jobsListElement.innerHTML = `
-                <div class="error-message">
-                    <p>Failed to load jobs. Please try again later.</p>
-                    <button class="btn secondary-blue" onclick="fetchJobs()">Retry</button>
-                </div>
-            `;
-        }
-    }
+// Fetch jobs from backend
+async function fetchJobs() {
+    try {
+        console.log("Fetching jobs from backend...");
 
-    // Render jobs list
-    function renderJobs() {
-        if (filteredJobs.length === 0) {
-            jobsListElement.innerHTML = `
-                <div class="no-jobs-message">
-                    <p>No jobs match your search criteria. Try adjusting your filters.</p>
-                </div>
-            `;
-            return;
-        }
+        allJobs = []; // 🔄 Clear old job data
+        filteredJobs = [];
 
-        // Calculate pagination
-        const startIndex = (currentPage - 1) * jobsPerPage;
-        const endIndex = Math.min(startIndex + jobsPerPage, filteredJobs.length);
-        const jobsToDisplay = filteredJobs.slice(startIndex, endIndex);
+        const response = await fetch('https://ai-resume-backend.axxendcorp.com/api/v1/jobs');
+        if (!response.ok) throw new Error('Failed to fetch jobs');
 
-        // Build HTML
-        let jobsHTML = '';
+        const data = await response.json();
+        console.log("Fetched jobs from backend:", data.jobs); // 🛠 Debugging
 
-        jobsToDisplay.forEach(job => {
-            const postedDate = new Date(job.postedDate);
-            const currentDate = new Date();
-            const diffTime = Math.abs(currentDate - postedDate);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        allJobs = data.jobs.map(job => ({
+            ...job,
+            shortDescription: job.description ? job.description.split('.')[0] + '.' : "No description available"
+        }));
 
-            let timeAgo;
-            if (diffDays === 0) {
-                timeAgo = 'Today';
-            } else if (diffDays === 1) {
-                timeAgo = '1 day ago';
-            } else if (diffDays < 7) {
-                timeAgo = `${diffDays} days ago`;
-            } else if (diffDays < 30) {
-                const weeks = Math.floor(diffDays / 7);
-                timeAgo = `${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`;
-            } else {
-                const months = Math.floor(diffDays / 30);
-                timeAgo = `${months} ${months === 1 ? 'month' : 'months'} ago`;
-            }
+        filteredJobs = [...allJobs];
 
-            jobsHTML += `
-                <div class="job-card" data-job-id="${job.id}">
-                    <div class="job-header">
-                        <div>
-                            <h3 class="job-title">${job.title}</h3>
-                            <div class="company-name">${job.company}</div>
-                        </div>
-                        <div class="salary">${job.salary}</div>
-                    </div>
-                    <div class="job-details">
-                        <div class="job-detail">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                <circle cx="12" cy="10" r="3"></circle>
-                            </svg>
-                            ${job.location}
-                        </div>
-                        <div class="job-detail">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                            </svg>
-                            ${job.type}
-                        </div>
-                        <div class="job-detail">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 20h9"></path>
-                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                            </svg>
-                            ${job.experience}
-                        </div>
-                    </div>
-                    <div class="job-description">
-                        ${job.shortDescription}
-                    </div>
-                    <div class="job-tags">
-                        ${job.skills.map(skill => `<span class="job-tag">${skill}</span>`).join('')}
-                    </div>
-                    <div class="posted-date">Posted ${timeAgo}</div>
-                </div>
-            `;
-        });
-
-        jobsListElement.innerHTML = jobsHTML;
-
-        // Add event listeners for job cards
-        document.querySelectorAll('.job-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const jobId = card.getAttribute('data-job-id');
-                openJobDetails(jobId);
-            });
-        });
-    }
-
-    // Update job count display
-    function updateJobCount() {
-        jobCountElement.textContent = filteredJobs.length;
-    }
-
-    // Render pagination controls
-    function renderPagination() {
-        const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
-
-        prevPageButton.classList.toggle('disabled', currentPage === 1);
-        nextPageButton.classList.toggle('disabled', currentPage === totalPages || totalPages === 0);
-
-        let pagesHTML = '';
-        let startPage = Math.max(1, currentPage - 2);
-        let endPage = Math.min(totalPages, startPage + 4);
-
-        if (endPage - startPage < 4) {
-            startPage = Math.max(1, endPage - 4);
-        }
-
-        for (let i = startPage; i <= endPage; i++) {
-            pagesHTML += `<span class="${i === currentPage ? 'current' : ''}">${i}</span>`;
-        }
-
-        pageNumbersElement.innerHTML = pagesHTML;
-
-        document.querySelectorAll('#page-numbers span').forEach(span => {
-            span.addEventListener('click', () => {
-                if (!span.classList.contains('current')) {
-                    currentPage = parseInt(span.textContent);
-                    renderJobs();
-                    renderPagination();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            });
-        });
-    }
-
-    // Apply filters
-    function applyFilters() {
-        currentFilters = {
-            search: searchInput.value.toLowerCase(),
-            location: locationFilter.value,
-            jobType: jobTypeFilter.value,
-            experience: experienceFilter.value
-        };
-
-        filteredJobs = allJobs.filter(job => {
-            const searchMatch = !currentFilters.search ||
-                job.title.toLowerCase().includes(currentFilters.search) ||
-                job.company.toLowerCase().includes(currentFilters.search) ||
-                job.shortDescription.toLowerCase().includes(currentFilters.search) ||
-                job.skills.some(skill => skill.toLowerCase().includes(currentFilters.search));
-
-            const locationMatch = !currentFilters.location || job.location.toLowerCase().includes(currentFilters.location);
-            const jobTypeMatch = !currentFilters.jobType || job.type.toLowerCase() === currentFilters.jobType;
-            const experienceMatch = !currentFilters.experience || job.experience.toLowerCase().includes(currentFilters.experience);
-
-            return searchMatch && locationMatch && jobTypeMatch && experienceMatch;
-        });
-
-        currentPage = 1;
         updateJobCount();
         renderJobs();
         renderPagination();
+    } catch (error) {
+        console.error('Error fetching jobs:', error);
+        jobsListElement.innerHTML = `<div class="error-message"><p>Failed to load jobs. Please try again later.</p></div>`;
+    }
+}
+
+
+// Render jobs list dynamically
+function renderJobs() {
+    if (filteredJobs.length === 0) {
+        jobsListElement.innerHTML = `<p>No jobs found.</p>`;
+        return;
     }
 
-    // Open job details modal
-    function openJobDetails(jobId) {
-        const job = allJobs.find(job => job.id.toString() === jobId);
-        if (!job) return;
+    const startIndex = (currentPage - 1) * jobsPerPage;
+    const jobsToDisplay = filteredJobs.slice(startIndex, startIndex + jobsPerPage);
 
-        jobDetailContent.innerHTML = `
-            <div class="job-detail-header">
-                <h2>${job.title}</h2>
-                <div class="company-detail">
-                    <div class="company-name">${job.company}</div>
-                    <div class="company-location">${job.location}</div>
-                </div>
-                <div class="job-highlight">
-                    <div class="salary">${job.salary}</div>
-                    <div class="job-type">${job.type}</div>
-                    <div class="experience-level">${job.experience}</div>
-                </div>
-            </div>
-            
-            <div class="job-description-full">
-                <h3>Job Description</h3>
-                ${job.fullDescription}
-            </div>
-            
-            <div class="job-requirements">
-                <h3>Requirements</h3>
-                <ul>
-                    ${job.requirements.map(req => `<li>${req}</li>`).join('')}
-                </ul>
-            </div>
-            
-            <div class="job-benefits">
-                <h3>Benefits</h3>
-                <ul>
-                    ${job.benefits.map(benefit => `<li>${benefit}</li>`).join('')}
-                </ul>
-            </div>
-            
-            <div class="job-skills">
-                <h3>Required Skills</h3>
-                <div class="job-tags">
-                    ${job.skills.map(skill => `<span class="job-tag">${skill}</span>`).join('')}
-                </div>
-            </div>
-        `;
+    jobsListElement.innerHTML = jobsToDisplay.map(job => {
+        if (!job.job_id) {
+            console.error("Missing job_id for job:", job);
+        }
+        const postedDate = new Date(job.created_at);
+        const currentDate = new Date();
+        const diffTime = Math.abs(currentDate - postedDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        applyButton.setAttribute('data-job-id', job.id);
-        saveJobButton.setAttribute('data-job-id', job.id);
+        let timeAgo;
+        if (diffDays === 0) {
+            timeAgo = 'Today';
+        } else if (diffDays === 1) {
+            timeAgo = '1 day ago';
+        } else if (diffDays < 7) {
+            timeAgo = `${diffDays} days ago`;
+        } else if (diffDays < 30) {
+            const weeks = Math.floor(diffDays / 7);
+            timeAgo = `${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`;
+        } else {
+            const months = Math.floor(diffDays / 30);
+            timeAgo = `${months} ${months === 1 ? 'month' : 'months'} ago`;
+        }
 
-        jobModal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
+        return `
+        <div class="job-card" data-job-id="${job.job_id || 'unknown'}" onclick="openJobDetails('${job.job_id}')">
+            <div class="job-header">
+                <div>
+                    <h3 class="job-title">${job.title || "No Title"}</h3>
+                    <div class="company-name">${job.company_name || "No Company"}</div>
+                </div>
+
+                <div class="salary">${job.salary ? `$${job.salary}` : "Not specified"}</div>
+            </div>
+            <div class="job-details">
+                <div class="job-detail">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    ${job.city}, ${job.region}
+                </div>
+                <div class="job-detail">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                    ${job.contract_type}
+                </div>
+                <div class="job-detail">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 20h9"></path>
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                    </svg>
+                    ${job.experience}
+                </div>
+            </div>
+            <div class="job-description">
+                ${job.shortDescription}
+            </div>
+            <div class="job-tags">
+                ${job.required_skills.map(skill => `<span class="job-tag">${skill}</span>`).join('')}
+            </div>
+            <div class="posted-date">Posted ${timeAgo}</div>
+        </div>
+    `;
+    }).join('');
+}
+
+// Open job details modal
+function openJobDetails(jobId) {
+    console.log("Opening job details for jobId:", jobId); // Debugging
+
+    const job = allJobs.find(job => job.job_id === jobId);
+    if (!job) {
+        console.error("Job not found for jobId:", jobId);
+        return;
     }
 
-    // Close job details modal
-    function closeJobDetails() {
-        jobModal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
+    jobDetailContent.innerHTML = `
+        <div class="job-detail-header">
+            <h2>${job.title}</h2>
+            <div class="company-detail">
+                <div class="company-name">${job.company_name || "No Company"}</div>
+                <div class="company-location">${job.city}, ${job.region}</div>
+            </div>
+            <div class="job-highlight">
+                <div class="salary">${job.salary ? `$${job.salary}` : "Not specified"}</div>
+                <div class="job-type">${job.contract_type}</div>
+                <div class="experience-level">${job.experience}</div>
+            </div>
+        </div>
+
+        <div class="job-description-full">
+            <h3>Job Description</h3>
+            ${job.description}
+        </div>
+
+        <div class="job-requirements">
+            <h3>Requirements</h3>
+            <ul>
+            ${job.requirements.length ? job.requirements.map(req => `<li>${req}</li>`).join('') : '<li>Not specified</li>'}
+            </ul>
+        </div>
+
+        <div class="job-benefits">
+            <h3>Benefits</h3>
+            <ul>
+            ${job.benefits.length ? job.benefits.map(benefit => `<li>${benefit}</li>`).join('') : '<li>Not specified</li>'}
+            </ul>
+        </div>
+
+        <div class="job-skills">
+            <h3>Required Skills</h3>
+            <div class="job-tags">
+            ${job.required_skills.length ? job.required_skills.map(skill => `<span class="job-tag">${skill}</span>`).join('') : 'Not specified'}
+            </div>
+        </div>
+    `;
+
+    jobModal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    // Update apply button
+    applyButton.setAttribute('data-job-id', job.job_id);
+    saveJobButton.setAttribute('data-job-id', job.job_id);
+}
+
+function closeJobDetails() {
+    jobModal.style.display = 'none';
+    document.body.style.overflow = 'auto'; // Restore scrolling
+}
+
+//  Update job count display
+function updateJobCount() {
+    jobCountElement.textContent = filteredJobs.length;
+}
+
+// // Render pagination
+function renderPagination() {
+    const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
+    prevPageButton.classList.toggle('disabled', currentPage === 1);
+    nextPageButton.classList.toggle('disabled', currentPage === totalPages || totalPages === 0);
+
+    pageNumbersElement.innerHTML = Array.from({ length: totalPages }, (_, i) =>
+        `<span class="${i + 1 === currentPage ? 'current' : ''}" onclick="changePage(${i + 1})">${i + 1}</span>`
+    ).join('');
+}
+
+// Apply filters
+function applyFilters() {
+    currentFilters = {
+        search: searchInput.value.toLowerCase(),
+        location: locationFilter.value,
+        jobType: jobTypeFilter.value,
+        experience: experienceFilter.value
+    };
+
+    filteredJobs = allJobs.filter(job => {
+        // Search filter (title, company, description)
+        const searchMatch = !currentFilters.search ||
+            job.title.toLowerCase().includes(currentFilters.search) ||
+            job.company.toLowerCase().includes(currentFilters.search) ||
+            job.shortDescription.toLowerCase().includes(currentFilters.search) ||
+            job.required_skills.some(skill => skill.toLowerCase().includes(currentFilters.search));
+
+        // Location filter
+        const locationMatch = !currentFilters.location ||
+            job.city.toLowerCase().includes(currentFilters.location) ||
+            job.region.toLowerCase().includes(currentFilters.location);
+
+        // Job type filter
+        const jobTypeMatch = !currentFilters.jobType ||
+            job.contract_type.toLowerCase() === currentFilters.jobType;
+
+        // Experience filter
+        const experienceMatch = !currentFilters.experience ||
+            job.experience.toLowerCase().includes(currentFilters.experience);
+
+        return searchMatch && locationMatch && jobTypeMatch && experienceMatch;
+    });
+
+    // Reset to first page
+    currentPage = 1;
+
+    // Update UI
+    updateJobCount();
+    renderJobs();
+    renderPagination();
+}
+
+
+// Save job
+function saveJob(jobId) {
+    alert('Job saved to your profile!');
+}
+
+
+
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', () => {
+    // Fetch jobs
+    setTimeout(fetchJobs, 100);
+    // fetchJobs();
+
+    // Page navigation
+    prevPageButton.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderJobs();
+            renderPagination();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+
+    nextPageButton.addEventListener('click', () => {
+        const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderJobs();
+            renderPagination();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+
+    // Search and filters
+    searchButton.addEventListener('click', applyFilters);
+    filterButton.addEventListener('click', applyFilters);
+
+    // Enter key for search
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            applyFilters();
+        }
+    });
+
+    // Modal functionality
+    closeModalButton.addEventListener('click', closeJobDetails);
+    window.addEventListener('click', (e) => {
+        if (e.target === jobModal) {
+            closeJobDetails();
+        }
+    });
+
+
+
+
+
+
 
     // Apply for job
-    function applyForJob(jobId) {
-        const isLoggedIn = checkUserLoggedIn();
-        if (!isLoggedIn) {
-            window.location.href = `../pages/jobseekers-signin.html?redirect=jobs&jobId=${jobId}`;
+    const applyButton = document.getElementById("apply-button");
+    applyButton.addEventListener("click", async function () {
+        const jobId = applyButton.getAttribute("data-job-id");
+
+        console.log("Applying for Job ID:", jobId); // ✅ Debugging
+
+        if (!jobId || jobId === "undefined") {
+            console.error("No valid job ID found for application.");
+            showToast("Error: No job ID found.", "error");
             return;
         }
-        alert('Application functionality would be implemented here!');
-    }
 
-    // Save job
-    function saveJob(jobId) {
-        const isLoggedIn = checkUserLoggedIn();
-        if (!isLoggedIn) {
-            window.location.href = '../pages/jobseekers-signin.html?redirect=jobs';
+        // Get the job details from allJobs using the jobId
+        const job = allJobs.find(job => job.job_id === jobId);
+        console.log("job details: ", job);
+        if (!job) {
+            console.error("Job details not found for job ID:", jobId);
+            showToast("Error: Job details not found.", "error");
             return;
         }
-        alert('Job saved to your profile!');
-    }
 
-    // Check if user is logged in
-    function checkUserLoggedIn() {
-        return false;
-    }
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (!user || !user.user_id) {
+            showToast("Please sign in to apply for jobs.", "error");
+            window.location.href = "../pages/jobseekers-signin.html";
+            return;
+        }
 
-    // Event listeners
-    document.addEventListener('DOMContentLoaded', () => {
-        fetchJobs();
+        applyButton.disabled = true; // Prevent multiple clicks
 
-        prevPageButton.addEventListener('click', () => {
-            if (currentPage > 1) {
-                currentPage--;
-                renderJobs();
-                renderPagination();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        });
 
-        nextPageButton.addEventListener('click', () => {
-            const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
-            if (currentPage < totalPages) {
-                currentPage++;
-                renderJobs();
-                renderPagination();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        });
+        const applicationData = {
+            job_id: jobId,
+            user_id: user.user_id,
+            application_status: "new",
+            employer_id: job.employer_id,
+        };
 
-        searchButton.addEventListener('click', applyFilters);
-        filterButton.addEventListener('click', applyFilters);
+        try {
+            const response = await fetch("https://ai-resume-backend.axxendcorp.com/api/v1/application/add", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Token ${user.token}`
+                },
+                body: JSON.stringify(applicationData),
+                mode: "cors"
+            });
+            
+            const data = await response.json();
+            console.log("Server Response:", data); // ✅ Debug response
 
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                applyFilters();
-            }
-        });
-
-        closeModalButton.addEventListener('click', closeJobDetails);
-        window.addEventListener('click', (e) => {
-            if (e.target === jobModal) {
-                closeJobDetails();
-            }
-        });
-
-        applyButton.addEventListener('click', () => {
-            const jobId = applyButton.getAttribute('data-job-id');
-            applyForJob(jobId);
-        });
-
-        saveJobButton.addEventListener('click', () => {
-            const jobId = saveJobButton.getAttribute('data-job-id');
-            saveJob(jobId);
-        });
+           
+           if (data.status_code === "AR00") {
+            showToast(data.message)
+           } else {
+            showToast(data.message)
+           }
+           
+        } catch (error) {
+            showToast("Network error. Please try again later.", "error");
+            console.error("Error:", error);
+        } finally {
+            applyButton.disabled = false;
+        }
     });
-}
+
+
+
+
+
+
+
+    // Function to show toast messages
+    function showToast(message, type) {
+        const toast = document.createElement("div");
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.classList.add("fade-out");
+            setTimeout(() => toast.remove(), 500);
+        }, 3000);
+    }
+
+
+    const saveJobButton = document.getElementById("save-job-button");
+    saveJobButton.addEventListener("click", async function () {
+        const jobId = saveJobButton.getAttribute("data-job-id");
+
+        console.log("Saving the Job with Job ID:", jobId); // ✅ Debugging
+
+        if (!jobId || jobId === "undefined") {
+            console.error("No valid job ID found for application.");
+            showToast("Error: No job ID found.", "error");
+            return;
+        }
+
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (!user || !user.user_id) {
+            showToast("Please sign in to save these jobs.", "error");
+            window.location.href = "../pages/jobseekers-signin.html";
+            return;
+        }
+
+        saveJobButton.disabled = true; // Prevent multiple clicks
+
+        const saveData = {
+            job_id: jobId,
+            user_id: user.user_id,
+            // application_status: "new",
+        };
+
+        try {
+            const response = await fetch("https://ai-resume-backend.axxendcorp.com/api/v1/job/save", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Token ${user.token}`
+                },
+                body: JSON.stringify(saveData),
+            });
+
+            const data = await response.json();
+            console.log("Server Response:", data); // ✅ Debug response
+
+            if (data.status_code === "AR00") {
+                showToast("Job application saved successfully!", "success");
+                fetchJobs(); // 🔄 Refresh job list after applying
+            } else if (data.status_code === "AR05") {
+                showToast("You have already saved this job.", "warning");
+            } else {
+                showToast(data.message || "Failed to save the job.", "error");
+            }
+        } catch (error) {
+            showToast("Network error. Please try again later.", "error");
+            console.error("Error:", error);
+        } finally {
+            saveJobButton.disabled = false;
+        }
+    });
+});
