@@ -74,13 +74,13 @@ function loadSavedJobsScripts() {
 }
 
 function highlightActiveLink() {
-    // Get the current path (e.g., "/pages/jobseeker-profile.html")
+    // Get the current path (e.g., "/ai-resume-frontend-v2/pages/jobseeker-profile.html")
     const currentPath = window.location.pathname;
     const sidebarLinks = document.querySelectorAll(".nav-item");
 
     sidebarLinks.forEach(link => {
         link.classList.remove("active");
-        // Get the href value (e.g., "/pages/jobseeker-profile.html")
+        // Get the href value (e.g., "/ai-resume-frontend-v2/pages/jobseeker-profile.html")
         const linkPath = link.getAttribute("href");
 
         // Check if the current path ends with or matches the link path
