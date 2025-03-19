@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Initialize current page content based on URL
     initializeCurrentPageContent();
+    fetchDashboardMetrics();
     // initializeJobBrowsing();
 
     fetchUserDetails();
