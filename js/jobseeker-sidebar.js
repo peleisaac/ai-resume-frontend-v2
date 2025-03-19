@@ -235,7 +235,7 @@ function loadContent(page) {
 
                 if (window.location.pathname.includes("/jobseekers-dashboard.html")) {
                     fetchDashboardMetrics();
-                    // window.location.reload();
+                    window.location.reload();
                     // initializeJobBrowsing();  // Add this line to initialize job browsing
                 }
 
