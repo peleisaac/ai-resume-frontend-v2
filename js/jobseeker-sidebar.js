@@ -48,7 +48,7 @@ function loadJobseekerSidebar() {
                 </a>
             </li>
             <li>
-                <a href="/pages/my_jobs.html" class="nav-item">
+                <a href="/ai-resume-frontend-v2/pages/my_jobs.html" class="nav-item">
                     <span class="icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -60,7 +60,7 @@ function loadJobseekerSidebar() {
                 </a>
             </li>
             <li>
-                <a href="/pages/jobseeker-browse-jobs.html" class="nav-item">
+                <a href="/ai-resume-frontend-v2/pages/jobseeker-browse-jobs.html" class="nav-item">
                     <span class="icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -72,7 +72,7 @@ function loadJobseekerSidebar() {
                 </a>
             </li>
             <li>
-                <a href="/pages/my_profile.html" class="nav-item">
+                <a href="/ai-resume-frontend-v2/pages/my_profile.html" class="nav-item">
                     <span class="icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -194,12 +194,12 @@ function loadContent(page) {
                 initializeCurrentPageContent();
 
                 // If the page is the Browse Jobs page, initialize job listings
-                if (window.location.pathname.includes("/ai-resume-frontend-v2/pages/jobseeker-browse-jobs.html")) {
+                if (window.location.pathname.includes("/jobseeker-browse-jobs.html")) {
                     window.location.reload();
                     initializeJobBrowsing();  // Add this line to initialize job browsing
                 }
 
-                if (window.location.pathname.includes("/ai-resume-frontend-v2/pages/my_profile.html")) {
+                if (window.location.pathname.includes("/my_profile.html")) {
                     window.location.reload();
                     // initializeJobBrowsing();  // Add this line to initialize job browsing
                 }
