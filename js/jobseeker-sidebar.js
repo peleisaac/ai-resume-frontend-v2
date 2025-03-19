@@ -136,6 +136,10 @@ async function fetchUserDetails() {
     }
 }
 
+function fetchDashboardMetrics(){
+    
+}
+
 function setupSidebarNavigation() {
     const sidebarLinks = document.querySelectorAll(".nav-item");
 
