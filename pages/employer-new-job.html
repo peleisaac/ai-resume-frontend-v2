@@ -203,15 +203,23 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const user = JSON.parse(localStorage.getItem("user")) || {}; // Adjust this based on how you store employer details
 
+            const user = JSON.parse(localStorage.getItem("user")) || {}; // Adjust this based on how you store employer details
+            console.log("User:", user);
             // Check if the employerData has a companyName and set it
-            if (user.company_name) {
+            const employer_id = user.user_id;
+            console.log("employer_id", employer_id);
+
+            const CompanyName = user.company_name;
+            console.log(CompanyName);
+            if (CompanyName) {
                 document.getElementById("companyName").value = user.company_name;
             }
 
             // Make the company name field read-only to prevent changes
             document.getElementById("companyName").setAttribute("readonly", "true");
+
+
 
             let requirements = [];
             let benefits = [];
@@ -223,11 +231,11 @@
             const requirementsList = document.getElementById("requirementsList");
             const requirementsData = document.getElementById("requirementsData");
 
-            addRequirementBtn.addEventListener("click", function() {
+            addRequirementBtn.addEventListener("click", function () {
                 addItemToList(requirementInput, requirementsList, requirements, requirementsData);
             });
 
-            requirementInput.addEventListener("keypress", function(e) {
+            requirementInput.addEventListener("keypress", function (e) {
                 if (e.key === "Enter") {
                     e.preventDefault();
                     addItemToList(requirementInput, requirementsList, requirements, requirementsData);
@@ -240,11 +248,11 @@
             const benefitsList = document.getElementById("benefitsList");
             const benefitsData = document.getElementById("benefitsData");
 
-            addBenefitBtn.addEventListener("click", function() {
+            addBenefitBtn.addEventListener("click", function () {
                 addItemToList(benefitInput, benefitsList, benefits, benefitsData);
             });
 
-            benefitInput.addEventListener("keypress", function(e) {
+            benefitInput.addEventListener("keypress", function (e) {
                 if (e.key === "Enter") {
                     e.preventDefault();
                     addItemToList(benefitInput, benefitsList, benefits, benefitsData);
@@ -257,11 +265,11 @@
             const skillsList = document.getElementById("skillsList");
             const skillsData = document.getElementById("skillsData");
 
-            addSkillBtn.addEventListener("click", function() {
+            addSkillBtn.addEventListener("click", function () {
                 addItemToList(skillInput, skillsList, skills, skillsData);
             });
 
-            skillInput.addEventListener("keypress", function(e) {
+            skillInput.addEventListener("keypress", function (e) {
                 if (e.key === "Enter") {
                     e.preventDefault();
                     addItemToList(skillInput, skillsList, skills, skillsData);
@@ -274,10 +282,10 @@
                 if (value) {
                     // Add to our array
                     itemsArray.push(value);
-                    
+
                     // Update the hidden input with JSON data
                     hiddenInput.value = JSON.stringify(itemsArray);
-                    
+
                     // Create a visual representation
                     const itemChip = document.createElement("div");
                     itemChip.classList.add("item-chip");
@@ -286,9 +294,9 @@
                         <span class="remove-item" data-value="${value}">×</span>
                     `;
                     listElement.appendChild(itemChip);
-                    
+
                     // Add event listener to remove item
-                    itemChip.querySelector(".remove-item").addEventListener("click", function() {
+                    itemChip.querySelector(".remove-item").addEventListener("click", function () {
                         const valueToRemove = this.getAttribute("data-value");
                         const index = itemsArray.indexOf(valueToRemove);
                         if (index !== -1) {
@@ -297,13 +305,13 @@
                             itemChip.remove();
                         }
                     });
-                    
+
                     // Clear the input
                     inputElement.value = "";
                     inputElement.focus();
                 }
             }
-            
+
             const jobForm = document.getElementById("jobPostingForm");
 
             jobForm.addEventListener("submit", async function (event) {
@@ -324,10 +332,12 @@
                     city: document.getElementById("city").value,
                     no_of_vacancies: parseInt(document.getElementById("vacancies").value),
                     salary: document.getElementById("salary").value,
-                    is_active: "1"
+                    is_active: "1",
+                    company_name: CompanyName,
+                    employer_id: employer_id
                 };
-
-                const user = JSON.parse(localStorage.getItem("user"));
+                console.log("JobData: ", jobData)
+                // const user = JSON.parse(localStorage.getItem("user"));
                 try {
                     const response = await fetch("https://ai-resume-backend.axxendcorp.com/api/v1/job/add", {
                         method: "POST",
