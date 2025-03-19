@@ -10,8 +10,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Initialize current page content based on URL
     initializeCurrentPageContent();
-    fetchDashboardMetrics();
-    // initializeJobBrowsing();
 
     fetchUserDetails();
 
@@ -137,40 +135,6 @@ async function fetchUserDetails() {
     }
 }
 
-async function fetchDashboardMetrics(){
-        const user = JSON.parse(localStorage.getItem("user"));
-        
-        document.addEventListener("DOMContentLoaded", function () {
-            if (!user || !user.token) {
-                console.error("User not logged in or token missing");
-                return;
-            }
-            fetch(`https://ai-resume-backend.axxendcorp.com/api/v1/jobseekers/dashboard-metrics`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                    "Authorization": `Token ${user.token}`
-                },
-                body: JSON.stringify({ "user_id": user.user_id }),
-                mode: "cors"
-            })
-                .then(response => response.json())
-                .then(data => {
-                    console.log("Fetched metrics:", data); // Debugging log
-
-                    const appliedJobsElement = document.querySelector(".metric-value.applied-jobs");
-                    const savedJobsElement = document.querySelector(".metric-value.saved-jobs");
-                    const interviewsElement = document.querySelector(".metric-value.interviews");
-
-                    if (appliedJobsElement) appliedJobsElement.textContent = data.data.all_applications_count || 0;
-                    if (savedJobsElement) savedJobsElement.textContent = data.data.saved_jobs_count || 0;
-                    if (interviewsElement) interviewsElement.textContent = data.interviewsScheduled || 0;
-                })
-                .catch(error => console.error("Error fetching metrics:", error));
-        });
-}
-
 function setupSidebarNavigation() {
     const sidebarLinks = document.querySelectorAll(".nav-item");
 
@@ -240,7 +204,6 @@ function loadContent(page) {
                 }
 
                 if (window.location.pathname.includes("/jobseekers-dashboard.html")) {
-                    fetchDashboardMetrics();
                     window.location.reload();
                     // initializeJobBrowsing();  // Add this line to initialize job browsing
                 }
