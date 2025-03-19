@@ -33,7 +33,7 @@
                 </div>
             </div>
 
-            <div class="content-card">
+            <div class="content-card dashboard">
                 <div class="card-header">
                     <h2>Welcome to your Dashboard</h2>
                     <p>Your AI-powered hiring overview</p>
@@ -51,7 +51,7 @@
                         </div>
                         <div class="metric-info">
                             <h3>Active Jobs</h3>
-                            <p class="metric-value">12</p>
+                            <p class="metric-value active-jobs">0</p>
                         </div>
                     </div>
 
@@ -68,7 +68,7 @@
                         </div>
                         <div class="metric-info">
                             <h3>Total Applications</h3>
-                            <p class="metric-value">248</p>
+                            <p class="metric-value applied-jobs">0</p>
                         </div>
                     </div>
 
@@ -85,82 +85,54 @@
                         </div>
                         <div class="metric-info">
                             <h3>Qualified Candidates</h3>
-                            <p class="metric-value">85</p>
-                        </div>
-                    </div>
-
-                    <div class="metric-card">
-                        <div class="metric-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M12 8V12L15 15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                            </svg>
-                        </div>
-                        <div class="metric-info">
-                            <h3>Time Saved</h3>
-                            <p class="metric-value">86 hours</p>
+                            <p class="metric-value candidate">0</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="recent-activity">
-                    <h3>Recent Activity</h3>
-                    <ul class="activity-list">
-                        <li class="activity-item">
-                            <div class="activity-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </div>
-                            <div class="activity-details">
-                                <p class="activity-text">New job posted: <strong>Senior Software Engineer</strong></p>
-                                <p class="activity-time">Today, 10:45 AM</p>
-                            </div>
-                        </li>
-                        <li class="activity-item">
-                            <div class="activity-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
-                                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                                    <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"
-                                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                                </svg>
-                            </div>
-                            <div class="activity-details">
-                                <p class="activity-text">15 new applications for <strong>Marketing Manager</strong></p>
-                                <p class="activity-time">Yesterday, 3:30 PM</p>
-                            </div>
-                        </li>
-                        <li class="activity-item">
-                            <div class="activity-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-                                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                                </svg>
-                            </div>
-                            <div class="activity-details">
-                                <p class="activity-text">8 candidates matched for <strong>Data Analyst</strong></p>
-                                <p class="activity-time">Yesterday, 11:20 AM</p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+
             </div>
         </main>
     </div>
 
     <script src="../js/employer-dashboard.js"></script>
-    <script>
-        
-    </script>
+    <!-- <script>
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const user = JSON.parse(localStorage.getItem("user"));
+            console.log("User: ", user);
+
+            if (!user || !user.token) {
+                console.error("User not logged in or token missing");
+                return;
+            }
+
+            fetch(`https://ai-resume-backend.axxendcorp.com/api/v1/employer/dashboard-metrics`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": `Token ${user.token}`
+                },
+                body: JSON.stringify({ "employer_id": user.user_id }),
+                mode: "cors"
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Fetched metrics:", data); // Debugging log
+
+                    const appliedJobsElement = document.querySelector(".metric-value.applied-jobs");
+                    const activeJobsElement = document.querySelector(".metric-value.active-jobs");
+                    const candidateElement = document.querySelector(".metric-value.candidate");
+
+                    if (appliedJobsElement) appliedJobsElement.textContent = data.data.all_applications_count || 0;
+                    if (activeJobsElement) activeJobsElement.textContent = data.data.active_jobs || 0;
+                    if (candidateElement) candidateElement.textContent = data.qualified_candidates || 0;
+                })
+                .catch(error => console.error("Error fetching metrics:", error));
+        });
+    </script> -->
 </body>
 
 </html>
