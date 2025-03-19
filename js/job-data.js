@@ -1,5 +1,19 @@
 // Job data management service
+
 const JobDataService = {
+
+    showToast: function (message, type) {
+        const toast = document.createElement("div");
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.classList.add("fade-out");
+            setTimeout(() => toast.remove(), 500);
+        }, 3000);
+    },
+
     loadJobs: async function () {
         try {
             const user = JSON.parse(localStorage.getItem("user"));
@@ -7,8 +21,10 @@ const JobDataService = {
                 console.warn("User not logged in or token missing. Falling back to mock data.");
                 return this.getMockJobs();
             }
+            console.log("User: ", user);
+            employer_id = user.user_id;
 
-            const response = await fetch("https://ai-resume-backend.axxendcorp.com/api/v1/jobs", {
+            const response = await fetch(`https://ai-resume-backend.axxendcorp.com/api/v1/jobs-by-employer/${employer_id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -20,14 +36,14 @@ const JobDataService = {
             const result = await response.json();
 
             if (response.ok && result.status_code === "AR00") {
-                console.log("Jobs fetched successfully:", result);
+                // this.showToast("Jobs loaded successfully!", "success");
                 return this.formatApiJobs(result.jobs);
             } else {
-                console.error("Failed to fetch jobs:", result.message);
+                this.showToast("Failed to load jobs. Using demo data.", "error");
                 return this.getMockJobs();
             }
         } catch (error) {
-            console.error("Error fetching jobs:", error);
+            this.showToast("Error connecting to server. Using demo data.", "error");
             return this.getMockJobs();
         }
     },
@@ -47,40 +63,10 @@ const JobDataService = {
 
     updateJobList: function (newJob) {
         console.log("Updating job list with new job:", newJob);
-        // This function is called after successfully adding a new job
-        // It's primarily used to update any local cache or state if needed
-
-        // For now, we'll just log the success
-        // In a real implementation, you might want to update a local cache
-        // or trigger a re-fetch of the job list
-
         console.log("Job added successfully, will refresh job list on next view");
-
-        // If you need to update a local cache, you could do something like:
-        // const currentJobs = JSON.parse(localStorage.getItem("jobs")) || [];
-        // currentJobs.push(formatApiJob(newJob));
-        // localStorage.setItem("jobs", JSON.stringify(currentJobs));
 
         return true;
     },
-    // getRegionFromLocation: function(location) {
-    //     // Simple function to determine region from location
-    //     // Can be expanded with more sophisticated logic if needed
-    //     if (!location) return "not specified";
-
-    //     const location_lower = location.toLowerCase();
-    //     if (location_lower.includes("remote")) return "remote";
-    //     if (location_lower.includes("new york") || location_lower.includes("boston")) return "northeast";
-    //     if (location_lower.includes("san francisco") || location_lower.includes("los angeles") ||
-    //         location_lower.includes("seattle") || location_lower.includes("portland")) return "west";
-    //     if (location_lower.includes("chicago") || location_lower.includes("detroit") ||
-    //         location_lower.includes("minneapolis")) return "midwest";
-    //     if (location_lower.includes("atlanta") || location_lower.includes("miami") ||
-    //         location_lower.includes("dallas") || location_lower.includes("houston")) return "south";
-
-    //     return "other";
-    // },
-
     getMockJobs: function () {
         return [
             {
@@ -161,17 +147,17 @@ const JobDataService = {
             const result = await response.json();
 
             if (response.ok) {
-                console.log("Job status updated successfully:", result);
+                this.showToast(`Job status updated to ${newStatus}!`, "success");
                 // Re-fetch and re-render the jobs table
                 const jobs = await this.loadJobs();
                 window.JobListings.renderJobs(jobs);
                 return true;
             } else {
-                console.error("Failed to update job status:", result.message);
+                this.showToast("Failed to update job status.", "error");
                 return false;
             }
         } catch (error) {
-            console.error("Error updating job status:", error);
+            this.showToast("Network error when updating job status.", "error");
             return false;
         }
     },
@@ -183,8 +169,9 @@ const JobDataService = {
                 console.warn("User not logged in or token missing. Cannot delete job.");
                 return false;
             }
+            console.log("User: ", user);
 
-            const response = await fetch(`https://ai-resume-backend.axxendcorp.com/api/v1/jobs/${jobId}`, {
+            const response = await fetch(`https://ai-resume-backend.axxendcorp.com/api/v1/job/delete/${jobId}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -194,18 +181,18 @@ const JobDataService = {
             });
 
             if (response.ok) {
-                console.log("Job deleted successfully");
+                this.showToast("Job deleted successfully!", "success");
                 // Re-fetch and re-render the jobs table
                 const jobs = await this.loadJobs();
                 window.JobListings.renderJobs(jobs);
                 return true;
             } else {
                 const result = await response.json();
-                console.error("Failed to delete job:", result.message);
+                this.showToast("Failed to delete job.", "error");
                 return false;
             }
         } catch (error) {
-            console.error("Error deleting job:", error);
+            this.showToast("Network error when deleting job.", "error");
             return false;
         }
     }
