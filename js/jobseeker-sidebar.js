@@ -35,7 +35,7 @@ function loadJobseekerSidebar() {
     <nav class="dashboard-nav">
         <ul>
             <li>
-                <a href="/pages/jobseekers-dashboard.html" class="nav-item">
+                <a href="/ai-resume-frontend-v2/pages/jobseekers-dashboard.html" class="nav-item">
                     <span class="icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" />
@@ -131,7 +131,7 @@ async function fetchUserDetails() {
 
     if (!user || !user.user_id || !user.token) {
         console.warn("User not found in localStorage. Redirecting to login...");
-        window.location.href = "ai-resume-frontend-v2/pages/jobseekers-signin.html"; // Redirect if user is missing
+        window.location.href = "/ai-resume-frontend-v2/pages/jobseekers-signin.html"; // Redirect if user is missing
         return;
     }
 }
@@ -167,7 +167,7 @@ function setupLogoutButton() {
             localStorage.removeItem("user");
 
             // Redirect to login page
-            window.location.href = "ai-resume-frontend-v2/pages/jobseekers-signin.html";
+            window.location.href = "/ai-resume-frontend-v2/pages/jobseekers-signin.html";
 
         });
     }
@@ -194,12 +194,12 @@ function loadContent(page) {
                 initializeCurrentPageContent();
 
                 // If the page is the Browse Jobs page, initialize job listings
-                if (window.location.pathname.includes("/jobseeker-browse-jobs.html")) {
+                if (window.location.pathname.includes("/ai-resume-frontend-v2/pages/jobseeker-browse-jobs.html")) {
                     window.location.reload();
                     initializeJobBrowsing();  // Add this line to initialize job browsing
                 }
 
-                if (window.location.pathname.includes("/my_profile.html")) {
+                if (window.location.pathname.includes("/ai-resume-frontend-v2/pages/my_profile.html")) {
                     window.location.reload();
                     // initializeJobBrowsing();  // Add this line to initialize job browsing
                 }
@@ -222,13 +222,16 @@ function initializeCurrentPageContent() {
 
 
     // Initialize job browsing if we're on the browse jobs page
-    if (window.location.pathname.includes("/jobseeker-browse-jobs.html")) {
+    if (window.location.pathname.includes("/ai-resume-frontend-v2/pages/jobseeker-browse-jobs.html")) {
         console.log("Initializing job browsing page");
         // initializeJobBrowsing();
     }
 
     // Initialize saved/applied jobs if we're on my jobs page
-    if (window.location.pathname.includes("/jobseeker-my-jobs.html")) {
+    if (window.location.pathname.includes("/ai-resume-frontend-v2/pages/jobseeker-my-jobs.html")) {
+        console.log("Initializing my jobs page");
+    }
+    if (window.location.pathname.includes("/ai-resume-frontend-v2/pages/jobseeker-my-jobs.html")) {
         console.log("Initializing my jobs page");
     }
 }
