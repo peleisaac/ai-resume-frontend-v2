@@ -122,62 +122,8 @@
     <div id="toast-container" class="toast-container"></div>
 
     <!-- Scripts -->
-    <!-- <script src="../js/navigation.js"></script> -->
     <script src="../js/jobseeker-sidebar.js"></script>
     <script src="../js/apply_jobs.js"></script>
-    <!-- <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const applyBtn = document.getElementById("apply-button");
-
-            applyBtn.addEventListener("click", function () {
-                // Show toast notification
-                showToast("Applying for job...", "info");
-
-                // Sample job application data (Modify as needed)
-                const applicationData = {
-                    jobId: "12345", // Replace with actual job ID
-                    userId: "67890", // Replace with actual user ID
-                    coverLetter: "I am interested in this position.", // Modify as needed
-                };
-
-                // Send POST request
-                fetch("https://ai-resume-backend.axxendcorp.com/api/v1/application/add", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(applicationData),
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            showToast("Job application submitted successfully!", "success");
-                        } else {
-                            showToast("Failed to apply for the job. Please try again.", "error");
-                        }
-                    })
-                    .catch(error => {
-                        showToast("Network error. Please check your connection.", "error");
-                        console.error("Error:", error);
-                    });
-            });
-
-            // Function to show toast messages
-            function showToast(message, type) {
-                const toast = document.createElement("div");
-                toast.className = `toast ${type}`;
-                toast.textContent = message;
-                document.body.appendChild(toast);
-
-                setTimeout(() => {
-                    toast.classList.add("fade-out");
-                    setTimeout(() => toast.remove(), 500);
-                }, 3000);
-            }
-        });
-
-
-    </script> -->
 
 </body>
 
