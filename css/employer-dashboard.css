@@ -175,6 +175,10 @@ body {
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   padding: 20px;
+  height: fit-content;
+}
+.dashboard{
+  height: 50vh;
 }
 
 .card-header {
@@ -408,6 +412,7 @@ body {
 
 .search-container input {
   width: 100%;
+  min-width: 0;
   padding: 10px 40px 10px 15px;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
@@ -811,4 +816,47 @@ body {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+
+/* .....TOAST...... */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  border-radius: 4px;
+  color: white;
+  font-weight: 500;
+  z-index: 9999;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  animation: toast-in 0.5s;
+}
+
+.toast.success {
+  background-color: #4caf50;
+}
+
+.toast.error {
+  background-color: #f44336;
+}
+
+.toast.warning {
+  background-color: #ff9800;
+}
+
+.toast.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+@keyframes toast-in {
+  from {
+      transform: translateY(-20px);
+      opacity: 0;
+  }
+  to {
+      transform: translateY(0);
+      opacity: 1;
+  }
 }
