@@ -9,7 +9,7 @@ body {
     margin: 0;
     height: 100vh;
     display: flex;
-    flex-direction: column; /* Stack elements vertically */
+    flex-direction: column; 
     justify-content: space-between;
 }
 
