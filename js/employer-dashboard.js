@@ -37,7 +37,7 @@ function loadSidebar() {
     <nav class="dashboard-nav">
         <ul>
             <li>
-                <a href="/pages/employer-dashboard.html" class="nav-item">
+                <a href="/ai-resume-frontend-v2/pages/employer-dashboard.html" class="nav-item">
                     <span class="icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" />
@@ -50,7 +50,7 @@ function loadSidebar() {
                 </a>
             </li>
             <li>
-                <a href="/pages/employer-new-job.html" class="nav-item active">
+                <a href="/ai-resume-frontend-v2/pages/employer-new-job.html" class="nav-item active">
                     <span class="icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -61,7 +61,7 @@ function loadSidebar() {
                 </a>
             </li>
             <li>
-                <a href="/pages/employer-job-listings.html" class="nav-item">
+                <a href="/ai-resume-frontend-v2/pages/employer-job-listings.html" class="nav-item">
                     <span class="icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -127,7 +127,7 @@ async function fetchUserDetails() {
 
 
 
-function setupLogoutButton() {
+function setupButton() {
     const logoutBtn = document.getElementById("logout-btn");
     if (logoutBtn) {
         logoutBtn.addEventListener("click", function (event) {
@@ -137,7 +137,7 @@ function setupLogoutButton() {
             localStorage.removeItem("user");
 
             // Redirect to login page
-            window.location.href = "employers-signin.html";
+            window.location.href = "/ai-resume-frontend-v2/pages/employers-signin.html";
 
             console.log("User logged out successfully");
         });
@@ -275,13 +275,13 @@ function loadJobScripts() {
 }
 
 function highlightActiveLink() {
-    // Get the current path (e.g., "/pages/employer-new-job.html")
+    // Get the current path (e.g., "/ai-resume-frontend-v2/pages/employer-new-job.html")
     const currentPath = window.location.pathname;
     const sidebarLinks = document.querySelectorAll(".nav-item");
 
     sidebarLinks.forEach(link => {
         link.classList.remove("active");
-        // Get the href value (e.g., "/pages/employer-new-job.html")
+        // Get the href value (e.g., "/ai-resume-frontend-v2/pages/employer-new-job.html")
         const linkPath = link.getAttribute("href");
 
         // Check if the current path ends with or matches the link path
