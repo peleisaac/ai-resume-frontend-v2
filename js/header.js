@@ -81,13 +81,13 @@ document.addEventListener("DOMContentLoaded", function () {
     let buttons = "";
 
     if (role === "jobseeker") {
-        buttons = `<button class="btn danger" data-target="../pages/employers-signin.html">Employers</button>`;
+        buttons = `<button class="btn danger" data-target="ai-resume-frontend-v2/pages/employers-signin.html">Employers</button>`;
     } else if (role === "employer") {
-        buttons = `<button class="btn danger" data-target="../pages/jobseekers-signin.html">Jobseekers</button>`;
+        buttons = `<button class="btn danger" data-target="ai-resume-frontend-v2/pages/jobseekers-signin.html">Jobseekers</button>`;
     } else {
         buttons = `
-            <button class="btn secondary-white" data-target="../pages/jobseekers-signin.html">Jobseekers</button>
-            <button class="btn danger" data-target="../pages/employers-signin.html">Employers</button>
+            <button class="btn secondary-white" data-target="ai-resume-frontend-v2/pages/jobseekers-signin.html">Jobseekers</button>
+            <button class="btn danger" data-target="ai-resume-frontend-v2/pages/employers-signin.html">Employers</button>
         `;
     }
 
@@ -100,8 +100,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 <button class="menu-btn" id="menu-btn">☰</button>
                 <nav>
                     <ul class="nav-links" id="nav-links">
-                        <li><a href="../pages/jobs.html" data-target="../pages/jobs.html">Jobs</a></li>
-                        <li><a href="../pages/contact.html" data-target="../pages/contact.html">Contact Us</a></li>
+                        <li><a href="ai-resume-frontend-v2/pages/jobs.html" data-target="ai-resume-frontend-v2/pages/jobs.html">Jobs</a></li>
+                        <li><a href="ai-resume-frontend-v2/pages/contact.html" data-target="ai-resume-frontend-v2/pages/contact.html">Contact Us</a></li>
                         ${buttons}
                     </ul>
                 </nav>
