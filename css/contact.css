@@ -1,8 +1,4 @@
 /* Contact Page Styles */
-/* html{
-  
-} */
-
 * {
   padding: 0;
   box-sizing: border-box;
@@ -13,12 +9,11 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 100vh; /* Use min-height instead of height */
+  height: 100vh; 
   margin: 0;
 }
 
 .contact {
-  /* padding: 40px 20px;  */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -34,20 +29,19 @@ body {
 .highlight {
   color: var(--primary-color);
 }
-.wrapper{
+.wrapper {
   display: flex;
   gap: 30px;
   flex-wrap: wrap;
+  justify-content: center;
 }
-/* Improved container layout */
 .contact-container {
   display: flex;
   flex-wrap: wrap;
   gap: 30px;
-  justify-content: center; /* Center elements */
+  justify-content: center; 
 }
 
-/* Contact Form & Info should take full width on mobile */
 .contact-form,
 .contact-info {
   flex: 1;
@@ -83,11 +77,10 @@ body {
 }
 
 .form-group input,
-.form-group select{
+.form-group select {
   height: 40px;
 }
 
-/* Reduce form button size for better fit */
 .contact-form button {
   width: 100%;
   padding: 12px;
@@ -143,10 +136,9 @@ body {
   line-height: 1.4;
 }
 
-
-/* ✅ Responsive adjustments */
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .wrapper{
+  .wrapper {
     flex-direction: column;
     align-items: center;
     gap: 10px;
@@ -154,6 +146,7 @@ body {
   .contact-container {
     flex-direction: column;
     align-items: center; /* Center content */
+    /* padding: 10px; */
   }
 
   .contact-form,
@@ -163,7 +156,6 @@ body {
 
   .contact h1 {
     font-size: 1.8rem;
-    
   }
 
   .contact-form h2,
