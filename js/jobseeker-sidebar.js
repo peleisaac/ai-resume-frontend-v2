@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Initialize current page content based on URL
     initializeCurrentPageContent();
-    fetchDashboardMetrics();
+    // fetchDashboardMetrics();
     // initializeJobBrowsing();
 
     fetchUserDetails();
@@ -138,8 +138,12 @@ async function fetchUserDetails() {
 }
 
 function fetchDashboardMetrics(){
-    const user = JSON.parse(localStorage.getItem("user"));
         document.addEventListener("DOMContentLoaded", function () {
+            const user = JSON.parse(localStorage.getItem("user"));
+            if (!user || !user.token) {
+                console.error("User not logged in or token missing");
+                return;
+            }
             fetch(`https://ai-resume-backend.axxendcorp.com/api/v1/jobseekers/dashboard-metrics`, {
                 method: "POST",
                 headers: {
