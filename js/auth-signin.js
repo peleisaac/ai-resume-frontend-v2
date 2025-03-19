@@ -18,17 +18,17 @@ document.addEventListener("DOMContentLoaded", function () {
                     <h2 class="title">${pageTitle}</h2>
                     <p class="subtitle">Access Your Account</p>
                 </div>
-
+    
                 <label for="email">Email</label>
                 <input type="email" id="email" placeholder="Enter Email" required>
-
+    
                 <label for="password">Password</label>
                 <input type="password" id="password" placeholder="Enter Password" required>
-
+    
                 <button type="submit" class="signin-btn">SIGN IN</button>
                 <p id="error-message" class="error-message"></p>
             </form>
-
+    
             <div class="auth-box">
                 <p>Don't have an account?</p>
                 <button onclick="location.href='${signUpPath}'" class="secondary-btn">SIGN UP HERE</button>
@@ -122,9 +122,13 @@ document.addEventListener("DOMContentLoaded", function () {
                                 console.log("No user object found in response");
                             }
 
-                            // Check if profile is completed
-                            if (profileData.status_code === "AR00" && profileData.user) {
-                                const profileCompleted = profileData.user.profile_complete === true;
+                            // Use handleApiResponse for consistent error handling
+                            const profileResult = handleApiResponse(profileData.status_code, profileData.user);
+                            console.log("Processed profile result:", profileResult);
+
+                            // Check if profile fetch was successful
+                            if (profileResult.success && profileResult.data) {
+                                const profileCompleted = profileResult.data.profile_complete === true;
                                 console.log("Profile completed status:", profileCompleted);
 
                                 // Redirect based on profile completion status
@@ -138,9 +142,8 @@ document.addEventListener("DOMContentLoaded", function () {
                             } else {
                                 console.log("Profile data issue, redirecting to profile page");
                                 window.location.href = userRole === "employer" ? "employers-profile.html" : "jobseekers-profile.html";
+                                alert(profileResult.message);
                             }
-
-                            alert(result.message);
                         })
                         .catch(profileError => {
                             console.error("Profile fetch error:", profileError);
@@ -148,11 +151,17 @@ document.addEventListener("DOMContentLoaded", function () {
                             window.location.href = userRole === "employer" ? "employers-profile.html" : "jobseekers-profile.html";
                         });
                 } else {
+                    document.getElementById("email").value = "";
+                    document.getElementById("password").value = "";
                     errorMessage.textContent = responseData.message || result.message;
                 }
             })
             .catch(error => {
                 console.error("Login error:", error);
+
+                document.getElementById("email").value = "";
+                document.getElementById("password").value = "";
+
                 errorMessage.textContent = "An error occurred. Please try again.";
             });
     }
