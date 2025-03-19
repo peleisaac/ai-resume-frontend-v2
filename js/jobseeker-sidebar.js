@@ -137,9 +137,10 @@ async function fetchUserDetails() {
     }
 }
 
-function fetchDashboardMetrics(){
+async function fetchDashboardMetrics(){
+        const user = JSON.parse(localStorage.getItem("user"));
+        
         document.addEventListener("DOMContentLoaded", function () {
-            const user = JSON.parse(localStorage.getItem("user"));
             if (!user || !user.token) {
                 console.error("User not logged in or token missing");
                 return;
