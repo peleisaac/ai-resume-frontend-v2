@@ -12,15 +12,12 @@ document.addEventListener("DOMContentLoaded", function () {
     initializeCurrentPageContent();
     // initializeJobBrowsing();
 
+    fetchUserDetails();
+
     setTimeout(highlightActiveLink, 100); // Short delay to ensure sidebar is loaded
 });
 
 function loadJobseekerSidebar() {
-
-    const user = JSON.parse(localStorage.getItem("user")) || {};
-    const fullName = user.first_name && user.last_name ? `${user.first_name} ${user.last_name}` : "Jobseeker";
-    const userRole = user.user_role || "Jobseeker";
-
     // Directly insert the sidebar HTML instead of fetching it
     const sidebarHTML = `<aside class="sidebar">
     <!-- Jobseeker Profile Section -->
@@ -29,8 +26,8 @@ function loadJobseekerSidebar() {
             <img src="../assets/lady.jpg" alt="Jobseeker Profile">
         </div>
         <div class="profile-info">
-            <h3>${fullName}</h3>
-            <p>${userRole}</p>
+            <h3 id="dashboard-name">Loading...</h3>
+            <p id="dashboard-role">Loading...</p>
         </div>
     </div>
 
@@ -38,7 +35,7 @@ function loadJobseekerSidebar() {
     <nav class="dashboard-nav">
         <ul>
             <li>
-                <a href="jobseekers-dashboard.html" class="nav-item">
+                <a href="/pages/jobseekers-dashboard.html" class="nav-item">
                     <span class="icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" />
@@ -51,7 +48,7 @@ function loadJobseekerSidebar() {
                 </a>
             </li>
             <li>
-                <a href="my_jobs.html" class="nav-item">
+                <a href="/pages/my_jobs.html" class="nav-item">
                     <span class="icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -63,7 +60,7 @@ function loadJobseekerSidebar() {
                 </a>
             </li>
             <li>
-                <a href="jobseeker-browse-jobs.html" class="nav-item">
+                <a href="/pages/jobseeker-browse-jobs.html" class="nav-item">
                     <span class="icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -75,7 +72,7 @@ function loadJobseekerSidebar() {
                 </a>
             </li>
             <li>
-                <a href="my_profile.html" class="nav-item">
+                <a href="/pages/my_profile.html" class="nav-item">
                     <span class="icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -114,6 +111,31 @@ function loadJobseekerSidebar() {
     }
 }
 
+async function fetchUserDetails() {
+    const user = JSON.parse(localStorage.getItem("user"))
+    console.log(user)
+
+    let nameElement = document.getElementById("dashboard-name");
+    let roleElement = document.getElementById("dashboard-role");
+
+    if (!nameElement || !roleElement){
+        console.warn("Dashboard elements not found. Skipping update.");
+        return;
+    }
+
+    if(user){
+        user.full_name = `${user.first_name} ${user.last_name}`;
+        nameElement.textContent = user.full_name || "Jane Doe";
+        roleElement.textContent = user.user_role || "Jobseeker"
+    }
+
+    if (!user || !user.user_id || !user.token) {
+        console.warn("User not found in localStorage. Redirecting to login...");
+        window.location.href = "../pages/jobseekers-signin.html"; // Redirect if user is missing
+        return;
+    }
+}
+
 function setupSidebarNavigation() {
     const sidebarLinks = document.querySelectorAll(".nav-item");
 
@@ -133,19 +155,20 @@ function setupSidebarNavigation() {
     });
 }
 
+
 function setupLogoutButton() {
     const logoutBtn = document.getElementById("logout-btn");
     if (logoutBtn) {
-        logoutBtn.addEventListener("click", function(event) {
+        logoutBtn.addEventListener("click", function (event) {
             event.preventDefault();
-            
+
             console.log("User logged out successfully");
             // Clear user data from localStorage
             localStorage.removeItem("user");
-            
+
             // Redirect to login page
             window.location.href = "../pages/jobseekers-signin.html";
-            
+
         });
     }
 }
@@ -196,8 +219,7 @@ function initializeJobBrowsing() {
 
 
 function initializeCurrentPageContent() {
-    // Setup profile form if we're on the profile page
-    // setupProfileForm();
+
 
     // Initialize job browsing if we're on the browse jobs page
     if (window.location.pathname.includes("jobseeker-browse-jobs.html")) {
@@ -208,7 +230,6 @@ function initializeCurrentPageContent() {
     // Initialize saved/applied jobs if we're on my jobs page
     if (window.location.pathname.includes("jobseeker-my-jobs.html")) {
         console.log("Initializing my jobs page");
-        // initializeMyJobs();
     }
 }
 function updateActiveLink(activeLink, allLinks) {
