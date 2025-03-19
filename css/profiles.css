@@ -59,7 +59,7 @@ input, select, textarea {
     margin: 5px 0 15px 0;
     border: 1px solid var(--ash-border-color);
     border-radius: 5px;
-    box-sizing: border-box; /* Prevents width issues */
+    box-sizing: border-box; 
 }
 
 textarea {
