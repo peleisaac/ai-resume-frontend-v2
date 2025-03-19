@@ -135,35 +135,6 @@
     <script src="../js/job-listings.js"></script>
     <script src="../js/employer-dashboard.js"></script>
 
-    <!-- <script>
-        const user = JSON.parse(localStorage.getItem("user"));
-        const fetchAllJobs = async () => {
-            try {
-                const response = await fetch("https://ai-resume-backend.axxendcorp.com/api/v1/jobs", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Token ${user?.token}`
-                    },
-                    mode: "cors"
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    alert("Job fetched successfully!");
-                    console.log("uyijknjn", result);
-                } else {
-                    alert(`Failed to Get jobs: ${result.message}`);
-                }
-            } catch (error) {
-                console.error("Error posting job:", error);
-                alert("An error occurred. Please try again.");
-            }
-        }
-
-        fetchAllJobs();
-    </script> -->
 </body>
 
 </html>
