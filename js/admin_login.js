@@ -62,22 +62,5 @@ document.addEventListener("DOMContentLoaded", function () {
         alert("Login successful");
         window.location.href = "../pages/admin-dashboard.html";
         console.log("Sending login request with data:", data);
-
-        // fetch("/api/auth/login", {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json"
-        //     },
-        //     body: JSON.stringify(data)
-        // })
-        //     .then(handleApiResponse)
-        //     .then((data) => {
-        //         console.log("Login successful:", data);
-        //         window.location.href = "/admin/dashboard";
-        //     })
-        //     .catch((error) => {
-        //         console.error("Login failed:", error);
-        //         errorMessage.textContent = error.message || "An error occurred. Please try again.";
-        //     });
     }
 });
