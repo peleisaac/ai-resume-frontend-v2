@@ -44,6 +44,29 @@ document.addEventListener('DOMContentLoaded', function () {
         fetchAppliedJobs();
     }
 
+    function parseRequiredSkills(skills) {
+        // Handle case where skills is a string that looks like a JSON array
+        if (typeof skills === 'string' && skills.startsWith('[') && skills.endsWith(']')) {
+            try {
+                return JSON.parse(skills);
+            } catch (e) {
+                console.error('Error parsing skills JSON string:', e);
+                // If parsing fails, try simple string splitting
+                return skills.replace(/[\[\]"]/g, '').split(',').map(s => s.trim());
+            }
+        }
+        // Handle case where skills is already an array
+        else if (Array.isArray(skills)) {
+            return skills;
+        }
+        // Handle case where skills is a simple string
+        else if (typeof skills === 'string') {
+            return [skills];
+        }
+        // Default to empty array
+        return [];
+    }
+
     async function fetchSavedJobs() {
         try {
             const user = JSON.parse(localStorage.getItem("user"));
@@ -57,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const user_id = user.user_id; // Extract user_id correctly
 
             savedJobsList.innerHTML = '<div class="loading-spinner"></div>';
-            const response = await fetch(`https://ai-resume-backend.axxendcorp.com/api/v1/jobs/saved/${user_id}`, {
+            const response = await fetch(`${apiEndpoints.savedJobs}/${user_id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -69,42 +92,46 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const data = await response.json();
             let saved_Jobs = data.saved_jobs || [];
-            console.log("Saved Jobs:", saved_Jobs); // Debugging purpose
 
-            const savedJobsCount = saved_Jobs.length
-            console.log("Number of saved Jobs", savedJobsCount)
+            const savedJobsCount = saved_Jobs.length;
 
 
             // Call function to display saved jobs if needed
             savedJobs = saved_Jobs.map(app => {
-                console.log("save: ", app)
                 if (!app.job_details) {
                     return {
                         id: app.saved_job_id,
+                        job_id: app.job_id,
                         title: "Application in Process",
-                        company: "Not specified",
-                        location: "Not specified",
+                        company_name: "Not specified",
+                        city: "Not specified",
+                        region: "Not specified",
                         salary: "Not specified",
-                        type: "Not specified",
-                        applied: app.created_at,
-                        // status: app.status.toLowerCase(),
+                        contract_type: "Not specified",
+                        created_at: app.created_at,
                         description: "Application is being processed.",
-                        requirements: ["No details available at this time"]
+                        requirements: ["No details available at this time"],
+                        required_skills: []
                     };
                 }
+
+                const required_skills = parseRequiredSkills( app.job_details.required_skills || []);
+
                 return {
                     id: app.saved_job_id,
+                    job_id: app.job_id,
                     title: app.job_details.title || "No Title",
-                    company: app.job_details.company_name || "Not specified",
-                    location: app.job_details.city && app.job_details.region ? `${app.job_details.city}, ${app.job_details.region}` : "Not specified",
-                    salary: app.job_details.salary ? `$${app.job_details.salary}` : "Not specified",
-                    type: app.job_details.contract_type || "Not specified",
-                    applied: app.created_at,
-                    // status: app.status.toLowerCase(),
+                    company_name: app.job_details.company_name || "Not specified",
+                    city: app.job_details.city || "Not specified",
+                    region: app.job_details.region || "Not specified",
+                    salary: app.job_details.salary || "Not specified",
+                    contract_type: app.job_details.contract_type || "Not specified",
+                    experience: app.job_details.experience || "Not specified",
+                    created_at: app.created_at,
                     description: app.job_details.description || "No description available.",
-                    requirements: app.job_details.requirements ?
-                        (typeof app.job_details.requirements === 'string' ? app.job_details.requirements.split('. ') : app.job_details.requirements) :
-                        ["No requirements specified"]
+                    requirements: parseRequiredSkills(app.job_details.requirements ||  []),
+                    required_skills: required_skills,
+                    benefits: parseRequiredSkills(app.job_details.benefits || [])
                 };
             });
             loadSavedJobs();
@@ -126,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const user_id = user.user_id;
 
             appliedJobsList.innerHTML = '<div class="loading-spinner"></div>';
-            const response = await fetch(`https://ai-resume-backend.axxendcorp.com/api/v1/applications/by-user/${user_id}`, {
+            const response = await fetch(`${apiEndpoints.applicationsByUser}/${user_id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -140,36 +167,47 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const applied_jobs = data.applications;
             const appliedJobCount = applied_jobs.length;
-            console.log("Number of Applied Jobs: ", appliedJobCount);
 
             appliedJobs = applied_jobs.map(app => {
                 if (!app.job_details) {
                     return {
                         id: app.application_id,
+                        job_id: app.job_id,
                         title: "Application in Process",
-                        company: "Not specified",
-                        location: "Not specified",
+                        company_name: "Not specified",
+                        city: "Not specified",
+                        region: "Not specified",
                         salary: "Not specified",
-                        type: "Not specified",
-                        applied: app.created_at,
+                        contract_type: "Not specified",
+                        experience: "Not specified",
+                        created_at: app.created_at,
                         status: app.status.toLowerCase(),
                         description: "Application is being processed.",
-                        requirements: ["No details available at this time"]
+                        requirements: ["No details available at this time"],
+                        required_skills: [],
+                        benefits: []
                     };
                 }
+
+                // Ensure required_skills is an array
+                const required_skills = parseRequiredSkills(app.job_details.required_skills || []);
+
                 return {
                     id: app.application_id,
+                    job_id: app.job_id,
                     title: app.job_details.title || "No Title",
-                    company: app.job_details.company_name || "Not specified",
-                    location: app.job_details.city && app.job_details.region ? `${app.job_details.city}, ${app.job_details.region}` : "Not specified",
-                    salary: app.job_details.salary ? `$${app.job_details.salary}` : "Not specified",
-                    type: app.job_details.contract_type || "Not specified",
-                    applied: app.created_at,
+                    company_name: app.job_details.company_name || "Not specified",
+                    city: app.job_details.city || "Not specified",
+                    region: app.job_details.region || "Not specified",
+                    salary: app.job_details.salary || "Not specified",
+                    contract_type: app.job_details.contract_type || "Not specified",
+                    experience: app.job_details.experience || "Not specified",
+                    created_at: app.created_at,
                     status: app.status.toLowerCase(),
                     description: app.job_details.description || "No description available.",
-                    requirements: app.job_details.requirements ?
-                        (typeof app.job_details.requirements === 'string' ? app.job_details.requirements.split('. ') : app.job_details.requirements) :
-                        ["No requirements specified"]
+                    requirements: parseRequiredSkills(app.job_details.requirements || []),
+                    required_skills: required_skills,
+                    benefits: parseRequiredSkills(app.job_details.benefits || [])
                 };
             });
             loadAppliedJobs();
@@ -214,127 +252,147 @@ document.addEventListener('DOMContentLoaded', function () {
         const jobCard = document.createElement('div');
         jobCard.className = 'job-card';
         jobCard.dataset.jobId = job.id;
-        // console.log("Creating job card for:", job);
+        const postedDate = new Date(job.created_at);
+        const currentDate = new Date();
+        const diffTime = Math.abs(currentDate - postedDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        // Common job details
-        let cardContent = `
-        <div class="job-card-header">
-            <h3>${job.title || "No Title"}</h3>
-            <div class="company-info">
-                <span class="company-name">${job.company || "Not specified"}</span>
-                <span class="job-location">${job.location || "Not specified"}</span>
+        let timeAgo;
+        if (diffDays === 0) {
+            timeAgo = 'Today';
+        } else if (diffDays === 1) {
+            timeAgo = '1 day ago';
+        } else if (diffDays < 7) {
+            timeAgo = `${diffDays} days ago`;
+        } else if (diffDays < 30) {
+            const weeks = Math.floor(diffDays / 7);
+            timeAgo = `${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`;
+        } else {
+            const months = Math.floor(diffDays / 30);
+            timeAgo = `${months} ${months === 1 ? 'month' : 'months'} ago`;
+        }
+
+        // Create job description (first sentence)
+        const shortDescription = job.description ?
+            job.description.split('.')[0] + '.' :
+            "No description available";
+
+        // Generate required skills HTML
+        const skillsHTML = job.required_skills && job.required_skills.length > 0 ?
+            job.required_skills.map(skill => `<span class="job-tag">${skill}</span>`).join('') :
+            '';
+
+        // Job card HTML structure matching browse_jobs.js
+        jobCard.innerHTML = `
+            <div class="job-header">
+                <div>
+                    <h3 class="job-title">${job.title || "No Title"}</h3>
+                    <div class="company-name">${job.company_name || "No Company"}</div>
+                </div>
+                <div class="salary">${job.salary ? `${job.salary}` : "Not specified"}</div>
             </div>
-        </div>
-        <div class="job-card-body">
             <div class="job-details">
-                <div class="detail">
-                    <span class="label">Salary:</span>
-                    <span class="value">${job.salary || "Not specified"}</span>
+                <div class="job-detail">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    ${job.city}, ${job.region}
                 </div>
-                <div class="detail">
-                    <span class="label">Type:</span>
-                    <span class="value">${job.type || "Not specified"}</span>
+                <div class="job-detail">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                    ${job.contract_type}
                 </div>
-                <div class="detail">
-                    <span class="label">${type === 'saved' ? 'Posted:' : 'Applied:'}</span>
-                    <span class="value">${type === 'saved' ?
-                (job.posted ? formatDate(job.posted) : "Not specified") :
-                (job.applied ? calculateTimeAgo(new Date(job.applied)) : "Not specified")}</span>
+                <div class="job-detail">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 20h9"></path>
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                    </svg>
+                    ${job.experience || "Not specified"}
                 </div>
             </div>
-        </div>
-    `;
-
-        // Add status badge for applied jobs
-        if (type === 'applied' && job.status) {
-            // Convert status to display format
-            const displayStatus = job.status.replace('_', ' ');
-            cardContent += `
-            <div class="job-status">
-                <span class="status-badge ${job.status}">${capitalizeFirstLetter(displayStatus)}</span>
+            <div class="job-description">
+                ${shortDescription}
+            </div>
+            <div class="job-tags">
+                ${skillsHTML}
+            </div>
+            <div class="posted-date">
+                ${type === 'saved' ? `Saved ${timeAgo}` : `Applied ${timeAgo}`}
+                ${type === 'applied' && job.status ?
+                `<span class="status-badge ${job.status}">${capitalizeFirstLetter(job.status.replace('_', ' '))}</span>` :
+                ''}
             </div>
         `;
-        }
-
-        // Add action buttons
-        cardContent += `
-        <div class="job-card-footer">
-            <button class="btn primary view-job-btn">View Details</button>
-            ${type === 'saved' ?
-                `<button class="btn secondary-blue apply-btn">Apply</button>` :
-                ''
-            }
-        </div>
-    `;
-
-        jobCard.innerHTML = cardContent;
-
-        // Add event listeners
-        jobCard.querySelector('.view-job-btn').addEventListener('click', () => openJobDetails(job, type));
-
-        if (type === 'saved') {
-            jobCard.querySelector('.apply-btn').addEventListener('click', () => {
-                window.location.href = `../pages/jobseeker-browse-jobs.html?jobId=${job.id}`;
-            });
-        }
+                
+        jobCard.addEventListener('click', () => openJobDetails(job, type));
 
         return jobCard;
     }
 
     // Open Job Details Modal
-    function openJobDetails(job, type) {
-        // Populate modal content
-        let modalContent = `
-        <h2>${job.title || "No Title"}</h2>
-        <div class="company-info">
-            <span class="company-name">${job.company || "Not specified"}</span>
-            <span class="job-location">${job.location || "Not specified"}</span>
-        </div>
-        <div class="job-info">
-            <div class="info-item">
-                <span class="label">Salary:</span>
-                <span class="value">${job.salary || "Not specified"}</span>
+   function openJobDetails(job, type) {
+        
+        jobDetailContent.innerHTML = `
+            <div class="job-detail-header">
+                <h2>${job.title}</h2>
+                <div class="company-detail">
+                    <div class="company-name">${job.company_name || "No Company"}</div>
+                    <div class="company-location">${job.city}, ${job.region}</div>
+                </div>
+                <div class="job-highlight">
+                    <div class="salary">${job.salary ? `$${job.salary}` : "Not specified"}</div>
+                    <div class="job-type">${job.contract_type}</div>
+                    <div class="experience-level">${job.experience || "Not specified"}</div>
+                    ${type === 'applied' && job.status ?
+                `<div class="application-status">
+                            <span class="status-badge ${job.status}">${capitalizeFirstLetter(job.status.replace('_', ' '))}</span>
+                        </div>` :
+                ''}
+                </div>
             </div>
-            <div class="info-item">
-                <span class="label">Type:</span>
-                <span class="value">${job.type || "Not specified"}</span>
+
+            <div class="job-description-full">
+                <h3>Job Description</h3>
+                ${job.description}
             </div>
-            <div class="info-item">
-                <span class="label">${type === 'saved' ? 'Posted:' : 'Applied:'}</span>
-                <span class="value">${type === 'saved' ?
-                (job.posted ? formatDate(job.posted) : "Not specified") :
-                (job.applied ? calculateTimeAgo(new Date(job.applied)) : "Not specified")}</span>
-            </div>
-            ${type === 'applied' && job.status ?
-                `<div class="info-item">
-                    <span class="label">Status:</span>
-                    <span class="value status-badge ${job.status}">${capitalizeFirstLetter(job.status.replace('_', ' '))}</span>
-                </div>` :
-                ''
-            }
-        </div>
-        <div class="job-description">
-            <h3>Description</h3>
-            <p>${job.description || "No description available."}</p>
-        </div>
-        <div class="job-requirements">
-            <h3>Requirements</h3>
-            <ul>
-                ${Array.isArray(job.requirements) ?
+
+            <div class="job-requirements">
+                <h3>Requirements</h3>
+                <ul>
+                ${Array.isArray(job.requirements) && job.requirements.length ?
                 job.requirements.map(req => `<li>${req}</li>`).join('') :
-                `<li>No requirements specified</li>`}
-            </ul>
-        </div>
-    `;
+                '<li>Not specified</li>'}
+                </ul>
+            </div>
 
-        jobDetailContent.innerHTML = modalContent;
+            <div class="job-benefits">
+                <h3>Benefits</h3>
+                <ul>
+                ${Array.isArray(job.benefits) && job.benefits.length ?
+                job.benefits.map(benefit => `<li>${benefit}</li>`).join('') :
+                '<li>Not specified</li>'}
+                </ul>
+            </div>
 
+            <div class="job-skills">
+                <h3>Required Skills</h3>
+                <div class="job-tags">
+                ${Array.isArray(job.required_skills) && job.required_skills.length ?
+                job.required_skills.map(skill => `<span class="job-tag">${skill}</span>`).join('') :
+                'Not specified'}
+                </div>
+            </div>
+        `;
+       
         // Update buttons based on job type
         if (type === 'saved') {
             applyButton.style.display = 'block';
             removeSavedButton.style.display = 'block';
             applyButton.onclick = () => {
-                console.log("Job", job)
                 window.location.href = `../pages/jobseeker-browse-jobs.html?jobId=${job.id}`;
             };
             removeSavedButton.onclick = () => {
@@ -348,10 +406,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Show modal
         modal.style.display = 'block';
+        document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
     }
     // Close Job Modal
     function closeJobModal() {
         modal.style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restore scrolling
     }
 
     // Remove a saved job
@@ -436,45 +496,75 @@ document.addEventListener('DOMContentLoaded', function () {
     // Search saved jobs
     savedSearchBtn.addEventListener('click', () => {
         const searchTerm = savedSearchInput.value.trim();
-        loadSavedJobs(searchTerm);
+        if (searchTerm) {
+            const filteredJobs = savedJobs.filter(job => jobMatchesSearch(job, searchTerm));
+            savedJobsList.innerHTML = "";
+
+            if (filteredJobs.length === 0) {
+                savedJobsList.innerHTML = `<p>No jobs matching "${searchTerm}" found.</p>`;
+            } else {
+                filteredJobs.forEach(job => {
+                    const jobCard = createJobCard(job, 'saved');
+                    savedJobsList.appendChild(jobCard);
+                });
+            }
+        } else {
+            loadSavedJobs();
+        }    
     });
 
     savedSearchInput.addEventListener('keyup', (e) => {
         if (e.key === 'Enter') {
-            const searchTerm = savedSearchInput.value.trim();
-            loadSavedJobs(searchTerm);
+            savedSearchBtn.click();
+
         }
     });
 
     // Search applied jobs
     appliedSearchBtn.addEventListener('click', () => {
         const searchTerm = appliedSearchInput.value.trim();
-        const filters = {
-            status: statusFilter.value,
-            date: dateFilter.value
-        };
-        loadAppliedJobs(searchTerm, filters);
+        const status = statusFilter.value;
+        const dateFilter = dateFilter.value;
+
+        let filteredJobs = [...appliedJobs];
+
+        // Apply search term filter
+        if (searchTerm) {
+            filteredJobs = filteredJobs.filter(job => jobMatchesSearch(job, searchTerm));
+        }
+
+        // Apply status filter
+        if (status) {
+            filteredJobs = filteredJobs.filter(job => job.status === status);
+        }
+
+        // Apply date filter
+        if (dateFilter) {
+            const cutoffDate = getPastDate(dateFilter);
+            filteredJobs = filteredJobs.filter(job => new Date(job.created_at) >= cutoffDate);
+        }
+
+        appliedJobsList.innerHTML = "";
+
+        if (filteredJobs.length === 0) {
+            appliedJobsList.innerHTML = "<p>No jobs match your filter criteria.</p>";
+        } else {
+            filteredJobs.forEach(job => {
+                const jobCard = createJobCard(job, 'applied');
+                appliedJobsList.appendChild(jobCard);
+            });
+        }
     });
 
     appliedSearchInput.addEventListener('keyup', (e) => {
         if (e.key === 'Enter') {
-            const searchTerm = appliedSearchInput.value.trim();
-            const filters = {
-                status: statusFilter.value,
-                date: dateFilter.value
-            };
-            loadAppliedJobs(searchTerm, filters);
+            appliedSearchBtn.click();
         }
     });
 
     // Apply filters
     filterBtn.addEventListener('click', () => {
-        const searchTerm = appliedSearchInput.value.trim();
-        const filters = {
-            status: statusFilter.value,
-            date: dateFilter.value
-        };
-        loadAppliedJobs(searchTerm, filters);
+        appliedSearchBtn.click();
     });
 
     // Close modal when clicking on X or outside the modal
@@ -493,6 +583,4 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Initialize page on load
-    init();
 });
