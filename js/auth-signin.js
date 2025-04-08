@@ -68,12 +68,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const data = {
             email: email,
             password: password,
-            user_role: userRole // jobseeker, employer, admin
+            user_role: userRole,
         };
 
         console.log("Sending login request with data:", data);
 
-        fetch(`https://ai-resume-backend.axxendcorp.com/api/v1/login`, {
+       fetch(`${apiEndpoints.login}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -147,7 +147,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         })
                         .catch(profileError => {
                             console.error("Profile fetch error:", profileError);
-                            // If there's an error fetching the profile, redirect to profile page
                             window.location.href = userRole === "employer" ? "employers-profile.html" : "jobseekers-profile.html";
                         });
                 } else {
