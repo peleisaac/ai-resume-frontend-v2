@@ -115,12 +115,11 @@
         </form>
     </div>
     <div id="footer"></div>
-    <script>
+    <script src="../context/constants/apiEndpoints.js"></script>
+    <script type="module">
         function validatePhoneNumber(input) {
-            // Remove any non-digit characters
             input.value = input.value.replace(/\D/g, "");
 
-            // Ensure length does not exceed 10
             if (input.value.length > 10) {
                 input.value = input.value.slice(0, 10);
             }
@@ -138,7 +137,7 @@
             try {
                 // Fetch the user data
                 const response = await fetch(
-                    `https://ai-resume-backend.axxendcorp.com/api/v1/user/${user.user_id}`,
+                    `${apiEndpoints.updateUser}/${user.user_id}`,
                     {
                         method: "PUT",
                         headers: {
@@ -200,7 +199,7 @@
 
                 try {
                     const response = await fetch(
-                        `https://ai-resume-backend.axxendcorp.com/api/v1/user/${user.user_id}`,
+                        `${apiEndpoints.updateUser}/${user.user_id}`,
                         {
                             // Replace with actual API URL
                             method: "PUT",
