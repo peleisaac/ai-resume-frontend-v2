@@ -173,6 +173,17 @@
     color: #6b7280;
     margin-top: 12px;
 }
+.posted-date {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+}
+
+.date-text {
+    color: #6c757d;
+    font-size: 0.85rem;
+}
 
 .job-status {
     padding: 4px 10px;
