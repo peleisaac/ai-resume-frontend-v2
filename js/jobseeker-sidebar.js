@@ -103,7 +103,6 @@ function loadJobseekerSidebar() {
     const sidebarContainer = document.getElementById("sidebar");
     if (sidebarContainer) {
         sidebarContainer.innerHTML = sidebarHTML;
-        console.log("Jobseeker sidebar manually inserted into #sidebar.");
         setupSidebarNavigation();
         setupLogoutButton();
         highlightActiveLink();
@@ -112,13 +111,12 @@ function loadJobseekerSidebar() {
 
 async function fetchUserDetails() {
     const user = JSON.parse(localStorage.getItem("user"))
-    console.log(user)
 
     let nameElement = document.getElementById("dashboard-name");
     let roleElement = document.getElementById("dashboard-role");
 
     if (!nameElement || !roleElement){
-        console.warn("Dashboard elements not found. Skipping update.");
+        alert("Dashboard elements not found. Skipping update.");
         return;
     }
 
@@ -129,7 +127,7 @@ async function fetchUserDetails() {
     }
 
     if (!user || !user.user_id || !user.token) {
-        console.warn("User not found in localStorage. Redirecting to login...");
+        alert("User not found in localStorage. Redirecting to login...");
         window.location.href = "/ai-resume-frontend-v2/pages/jobseekers-signin.html"; // Redirect if user is missing
         return;
     }
