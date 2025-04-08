@@ -210,22 +210,25 @@
             </div>
         </main>
     </div>
+    
+    <script src="../context/constants/apiEndpoints.js"></script>
     <script src="../js/jobseeker-sidebar.js"></script>
     <script src="../js/jobseeker-dashboard.js"></script>
-    <script>
-        const user = JSON.parse(localStorage.getItem("user"));
+    
+    <script type="module">
         
         document.addEventListener("DOMContentLoaded", function () {
+            const user = JSON.parse(localStorage.getItem("user"));
             if (!user || !user.token) {
                 console.error("User not logged in or token missing");
                 return;
             }
-            fetch(`https://ai-resume-backend.axxendcorp.com/api/v1/jobseekers/dashboard-metrics`, {
+            fetch(`${apiEndpoints.jobseekerDashboardMetrics}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Accept": "application/json",
-                    "Authorization": `Token ${user.token}`
+                    Authorization: `Token ${user.token}`
                 },
                 body: JSON.stringify({ "user_id": user.user_id }),
                 mode: "cors"
