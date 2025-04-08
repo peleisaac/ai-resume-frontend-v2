@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const appliedSearchInput = document.getElementById('applied-search');
     const appliedSearchBtn = document.getElementById('applied-search-btn');
     const statusFilter = document.getElementById('status-filter');
-    const dateFilter = document.getElementById('date-filter');
+    const dateFilterElement = document.getElementById('date-filter'); 
     const filterBtn = document.getElementById('filter-btn');
     const modal = document.getElementById('job-modal');
     const closeModal = document.querySelector('.modal .close');
@@ -50,7 +50,6 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 return JSON.parse(skills);
             } catch (e) {
-                console.error('Error parsing skills JSON string:', e);
                 // If parsing fails, try simple string splitting
                 return skills.replace(/[\[\]"]/g, '').split(',').map(s => s.trim());
             }
@@ -67,13 +66,13 @@ document.addEventListener('DOMContentLoaded', function () {
         return [];
     }
 
+
     async function fetchSavedJobs() {
         try {
             const user = JSON.parse(localStorage.getItem("user"));
 
             // Ensure user exists and has a valid user_id
             if (!user || !user.user_id) {
-                console.warn("Please sign in to view saved jobs.");
                 return;
             }
 
@@ -95,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const savedJobsCount = saved_Jobs.length;
 
-
             // Call function to display saved jobs if needed
             savedJobs = saved_Jobs.map(app => {
                 if (!app.job_details) {
@@ -115,6 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     };
                 }
 
+                // Ensure required_skills is an array
                 const required_skills = parseRequiredSkills( app.job_details.required_skills || []);
 
                 return {
@@ -137,16 +136,15 @@ document.addEventListener('DOMContentLoaded', function () {
             loadSavedJobs();
 
         } catch (error) {
-            console.error("Error fetching saved jobs:", error);
+            alert("Error fetching saved jobs:", error);
         }
     }
-
 
     async function fetchAppliedJobs() {
         try {
             const user = JSON.parse(localStorage.getItem("user"));
             if (!user || !user.user_id) {
-                console.warn("Please sign in to view applied jobs.");
+                alert("Please sign in to view applied jobs.");
                 return;
             }
 
@@ -163,7 +161,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (!response.ok) throw new Error("Failed to fetch applied jobs.");
             const data = await response.json();
-
 
             const applied_jobs = data.applications;
             const appliedJobCount = applied_jobs.length;
@@ -212,13 +209,13 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             loadAppliedJobs();
         } catch (error) {
-            console.error("Error fetching applied jobs:", error);
+            alert("Error fetching applied jobs:", error);
         }
     }
 
     function loadSavedJobs() {
         savedJobsList.innerHTML = "";
-        
+
         if (savedJobs.length === 0) {
             noSavedJobsMsg.style.display = 'block';
         } else {
@@ -244,14 +241,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-
     init();
 
-    // Create Job Card
+    // Create Job Card - Updated to match browse_jobs.js style
     function createJobCard(job, type) {
         const jobCard = document.createElement('div');
         jobCard.className = 'job-card';
         jobCard.dataset.jobId = job.id;
+
+        // Calculate time ago for posting date
         const postedDate = new Date(job.created_at);
         const currentDate = new Date();
         const diffTime = Math.abs(currentDate - postedDate);
@@ -327,14 +325,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 ''}
             </div>
         `;
-                
+
+        // Add event listener to open job details
         jobCard.addEventListener('click', () => openJobDetails(job, type));
 
         return jobCard;
     }
 
-    // Open Job Details Modal
-   function openJobDetails(job, type) {
+    function openJobDetails(job, type) {
         
         jobDetailContent.innerHTML = `
             <div class="job-detail-header">
@@ -387,13 +385,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>
             </div>
         `;
-       
+
         // Update buttons based on job type
         if (type === 'saved') {
             applyButton.style.display = 'block';
             removeSavedButton.style.display = 'block';
             applyButton.onclick = () => {
-                window.location.href = `../pages/jobseeker-browse-jobs.html?jobId=${job.id}`;
+                window.location.href = `../pages/jobseeker-browse-jobs.html?jobId=${job.job_id}`;
             };
             removeSavedButton.onclick = () => {
                 removeSavedJob(job.id);
@@ -408,6 +406,7 @@ document.addEventListener('DOMContentLoaded', function () {
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
     }
+
     // Close Job Modal
     function closeJobModal() {
         modal.style.display = 'none';
@@ -415,10 +414,31 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Remove a saved job
-    function removeSavedJob(jobId) {
-        savedJobs = savedJobs.filter(job => job.id !== jobId);
-        loadSavedJobs();
-        showToast('Job removed from saved list');
+    async function removeSavedJob(jobId) {
+        try {
+            const user = JSON.parse(localStorage.getItem("user"));
+            if (!user || !user.user_id) {
+                showToast("Please sign in to remove saved jobs.", "error");
+                return;
+            }
+
+            const response = await fetch(`${apiEndpoints.removeSavedJob}/${jobId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Token ${user.token}`
+                }
+            });
+
+            if (!response.ok) throw new Error("Failed to remove saved job.");
+
+            // Update the UI
+            savedJobs = savedJobs.filter(job => job.id !== jobId);
+            loadSavedJobs();
+            showToast('Job removed from saved list', 'success');
+        } catch (error) {
+            showToast('Failed to remove job. Please try again.', 'error');
+        }
     }
 
     // Show toast notification
@@ -447,8 +467,8 @@ document.addEventListener('DOMContentLoaded', function () {
         searchTerm = searchTerm.toLowerCase();
         return (
             job.title.toLowerCase().includes(searchTerm) ||
-            job.company.toLowerCase().includes(searchTerm) ||
-            job.location.toLowerCase().includes(searchTerm)
+            job.company_name.toLowerCase().includes(searchTerm) ||
+            (job.city + ' ' + job.region).toLowerCase().includes(searchTerm)
         );
     }
 
@@ -510,13 +530,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         } else {
             loadSavedJobs();
-        }    
+        }
     });
 
     savedSearchInput.addEventListener('keyup', (e) => {
         if (e.key === 'Enter') {
             savedSearchBtn.click();
-
         }
     });
 
@@ -524,7 +543,7 @@ document.addEventListener('DOMContentLoaded', function () {
     appliedSearchBtn.addEventListener('click', () => {
         const searchTerm = appliedSearchInput.value.trim();
         const status = statusFilter.value;
-        const dateFilter = dateFilter.value;
+        const dateFilterValue = dateFilterElement.value;
 
         let filteredJobs = [...appliedJobs];
 
@@ -539,8 +558,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Apply date filter
-        if (dateFilter) {
-            const cutoffDate = getPastDate(dateFilter);
+        if (dateFilterValue) {
+            const cutoffDate = getPastDate(dateFilterValue);
             filteredJobs = filteredJobs.filter(job => new Date(job.created_at) >= cutoffDate);
         }
 
@@ -582,5 +601,4 @@ document.addEventListener('DOMContentLoaded', function () {
             closeJobModal();
         }
     });
-
 });
