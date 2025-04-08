@@ -186,7 +186,7 @@ function fetchDashboardMetrics() {
         return;
     }
 
-    fetch(`https://ai-resume-backend.axxendcorp.com/api/v1/employer/dashboard-metrics`, {
+    fetch(`${apiEndpoints.employerDashboardMetrics}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
