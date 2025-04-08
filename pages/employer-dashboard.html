@@ -95,44 +95,9 @@
         </main>
     </div>
 
+    <script src="../context/constants/apiEndpoints.js"></script>
     <script src="../js/employer-dashboard.js"></script>
-    <!-- <script>
-
-
-        document.addEventListener("DOMContentLoaded", function () {
-            const user = JSON.parse(localStorage.getItem("user"));
-            console.log("User: ", user);
-
-            if (!user || !user.token) {
-                console.error("User not logged in or token missing");
-                return;
-            }
-
-            fetch(`https://ai-resume-backend.axxendcorp.com/api/v1/employer/dashboard-metrics`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                    "Authorization": `Token ${user.token}`
-                },
-                body: JSON.stringify({ "employer_id": user.user_id }),
-                mode: "cors"
-            })
-                .then(response => response.json())
-                .then(data => {
-                    console.log("Fetched metrics:", data); // Debugging log
-
-                    const appliedJobsElement = document.querySelector(".metric-value.applied-jobs");
-                    const activeJobsElement = document.querySelector(".metric-value.active-jobs");
-                    const candidateElement = document.querySelector(".metric-value.candidate");
-
-                    if (appliedJobsElement) appliedJobsElement.textContent = data.data.all_applications_count || 0;
-                    if (activeJobsElement) activeJobsElement.textContent = data.data.active_jobs || 0;
-                    if (candidateElement) candidateElement.textContent = data.qualified_candidates || 0;
-                })
-                .catch(error => console.error("Error fetching metrics:", error));
-        });
-    </script> -->
+    
 </body>
 
 </html>
