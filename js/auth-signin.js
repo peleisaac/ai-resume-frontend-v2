@@ -98,12 +98,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     console.log("Auth token:", result.data.token);
 
                     // Make a request to the users endpoint to check profile completion status
-                    return fetch(`https://ai-resume-backend.axxendcorp.com/api/v1/users/${userId}`, {
+                    return fetch(`${apiEndpoints.user}/${userId}`, {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",
                             "Accept": "application/json",
-                            "Authorization": `Token ${result.data.token}`
+                            Authorization: `Token ${result.data.token}`
                         },
                         mode: "cors"
                     })
