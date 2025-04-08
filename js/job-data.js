@@ -24,7 +24,7 @@ const JobDataService = {
             console.log("User: ", user);
             employer_id = user.user_id;
 
-            const response = await fetch(`https://ai-resume-backend.axxendcorp.com/api/v1/jobs-by-employer/${employer_id}`, {
+            const response = await fetch(`${apiEndpoints.jobsByEmployer}/${employer_id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -134,7 +134,7 @@ const JobDataService = {
                 return false;
             }
 
-            const response = await fetch(`https://ai-resume-backend.axxendcorp.com/api/v1/jobs/${jobId}/status`, {
+            const response = await fetch(`${apiEndpoints.applicationStatus}/${jobId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -171,7 +171,7 @@ const JobDataService = {
             }
             console.log("User: ", user);
 
-            const response = await fetch(`https://ai-resume-backend.axxendcorp.com/api/v1/job/delete/${jobId}`, {
+            const response = await fetch(`${apiEndpoints.deleteJob}/${jobId}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
