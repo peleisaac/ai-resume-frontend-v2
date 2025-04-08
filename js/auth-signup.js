@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", function () {
             };
         }
 
-        fetch("https://ai-resume-backend.axxendcorp.com/api/v1/signup", {
+        fetch(`${apiEndpoints.signup}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
