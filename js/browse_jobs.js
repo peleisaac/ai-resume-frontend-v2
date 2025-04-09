@@ -152,42 +152,44 @@ function openJobDetails(jobId) {
     }
 
     jobDetailContent.innerHTML = `
-        <div class="job-detail-header">
-            <h2>${job.title}</h2>
-            <div class="company-detail">
-                <div class="company-name">${job.company_name || "No Company"}</div>
-                <div class="company-location">${job.city}, ${job.region}</div>
+        <div class="job-wrapper">
+            <div class="job-detail-header">
+                <h2>${job.title}</h2>
+                <div class="company-detail">
+                    <div class="company-name">${job.company_name || "No Company"}</div>
+                    <div class="company-location">${job.city}, ${job.region}</div>
+                </div>
+                <div class="job-highlight">
+                    <div class="salary">${job.salary ? `$${job.salary}` : "Not specified"}</div>
+                    <div class="job-type">${job.contract_type}</div>
+                    <div class="experience-level">${job.experience}</div>
+                </div>
             </div>
-            <div class="job-highlight">
-                <div class="salary">${job.salary ? `$${job.salary}` : "Not specified"}</div>
-                <div class="job-type">${job.contract_type}</div>
-                <div class="experience-level">${job.experience}</div>
+    
+            <div class="job-description-full">
+                <h3>Job Description</h3>
+                ${job.description}
             </div>
-        </div>
-
-        <div class="job-description-full">
-            <h3>Job Description</h3>
-            ${job.description}
-        </div>
-
-        <div class="job-requirements">
-            <h3>Requirements</h3>
-            <ul>
-            ${job.requirements.length ? job.requirements.map(req => `<li>${req}</li>`).join('') : '<li>Not specified</li>'}
-            </ul>
-        </div>
-
-        <div class="job-benefits">
-            <h3>Benefits</h3>
-            <ul>
-            ${job.benefits.length ? job.benefits.map(benefit => `<li>${benefit}</li>`).join('') : '<li>Not specified</li>'}
-            </ul>
-        </div>
-
-        <div class="job-skills">
-            <h3>Required Skills</h3>
-            <div class="job-tags">
-            ${job.required_skills.length ? job.required_skills.map(skill => `<span class="job-tag">${skill}</span>`).join('') : 'Not specified'}
+    
+            <div class="job-requirements">
+                <h3>Requirements</h3>
+                <ul>
+                ${job.requirements.length ? job.requirements.map(req => `<li>${req}</li>`).join('') : '<li>Not specified</li>'}
+                </ul>
+            </div>
+    
+            <div class="job-benefits">
+                <h3>Benefits</h3>
+                <ul>
+                ${job.benefits.length ? job.benefits.map(benefit => `<li>${benefit}</li>`).join('') : '<li>Not specified</li>'}
+                </ul>
+            </div>
+    
+            <div class="job-skills">
+                <h3>Required Skills</h3>
+                <div class="job-tags">
+                ${job.required_skills.length ? job.required_skills.map(skill => `<span class="job-tag skill">${skill}</span>`).join('') : 'Not specified'}
+                </div>
             </div>
         </div>
     `;
