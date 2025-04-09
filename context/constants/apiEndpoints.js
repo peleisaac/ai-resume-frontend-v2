@@ -14,6 +14,8 @@ const apiEndpoints = {
     jobs: `${baseUrl}/jobs`,
     saveJob: `${baseUrl}/job/save`,
     savedJobs: `${baseUrl}/jobs/saved`,
+    removeSavedJob: `${baseUrl}/saved-job/remove`,
+    
     deleteJob: `${baseUrl}/job/delete`,
     addJob: `${baseUrl}/job/add`,
     applicationStatus: `${baseUrl}/application/status`,
