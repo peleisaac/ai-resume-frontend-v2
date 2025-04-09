@@ -329,10 +329,8 @@ document.addEventListener('DOMContentLoaded', () => {
     applyButton.addEventListener("click", async function () {
         const jobId = applyButton.getAttribute("data-job-id");
 
-        console.log("Applying for Job ID:", jobId); // ✅ Debugging
 
         if (!jobId || jobId === "undefined") {
-            console.error("No valid job ID found for application.");
             showToast("Error: No job ID found.", "error");
             return;
         }
@@ -341,7 +339,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const job = allJobs.find(job => job.job_id === jobId);
         console.log("job details: ", job);
         if (!job) {
-            console.error("Job details not found for job ID:", jobId);
             showToast("Error: Job details not found.", "error");
             return;
         }
@@ -375,7 +372,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             
             const data = await response.json();
-            console.log("Server Response:", data); // ✅ Debug response
 
            
            if (data.status_code === "AR00") {
