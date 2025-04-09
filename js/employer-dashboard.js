@@ -178,10 +178,50 @@ function loadContent(page) {
 
             document.title = tempDiv.querySelector("title").innerText;
 
+            // Execute scripts from the loaded page
+            const scripts = tempDiv.querySelectorAll("script");
+            scripts.forEach(script => {
+                if (script.type === "module" || script.src) {
+                    // For external scripts or modules, create a new script element
+                    const newScript = document.createElement("script");
+                    if (script.src) newScript.src = script.src;
+                    if (script.type) newScript.type = script.type;
+                    document.body.appendChild(newScript);
+                } else {
+                    // For inline scripts, evaluate them
+                    eval(script.innerText);
+                }
+            });
+
             // Initialize appropriate functionality based on page
             initializeCurrentPageContent();
+
+            // If it's the new job page, update the company name
+            if (page.includes("employer-new-job.html")) {
+                updateCompanyNameField();
+            }
         })
         .catch(error => console.error("Error loading content:", error));
+}
+
+function updateCompanyNameField() {
+    const user = JSON.parse(localStorage.getItem("user")) || {};
+    console.log("Updating company name field with user data:", user);
+
+    // Get company name from user data (try multiple possible property names)
+    const companyName = user.company_name || user.companyName || '';
+
+    if (companyName && companyName.trim() !== '') {
+        const companyNameField = document.getElementById("companyName");
+        if (companyNameField) {
+            companyNameField.value = companyName;
+            companyNameField.setAttribute("readonly", "true");
+        } else {
+            console.error("Company name field not found in DOM");
+        }
+    } else {
+        console.warn("No company name found in user data");
+    }
 }
 
 // Add this function to employer-dashboard.js
@@ -218,8 +258,10 @@ function fetchDashboardMetrics() {
 }
 
 function initializeCurrentPageContent() {
-    // Setup job posting form for new job page
-    // setupJobPostingForm();
+    if (window.location.pathname.includes("employer-new-job.html")) {
+        console.log("Initializing new job page");
+        updateCompanyNameField();
+    }
 
     // Initialize job listings if we're on the job listings page
     if (window.location.pathname.includes("employer-job-listings.html")) {
