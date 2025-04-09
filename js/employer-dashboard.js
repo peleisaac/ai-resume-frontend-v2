@@ -101,28 +101,34 @@ function loadSidebar() {
 
 async function fetchUserDetails() {
     const user = JSON.parse(localStorage.getItem("user"));
-
+    console.log(user);
+    
+    if (!user) {
+        console.warn("No user object found in localStorage");
+        window.location.href = "../pages/employers-signin.html";
+        return;
+    }
+    
+    // Still update UI elements even if token is missing
     let nameElement = document.getElementById("dashboard-name");
-    let roleElement = document.getElementById("dashboard-role");
+    let contactElement = document.getElementById("dashboard-role");
 
-    if (!nameElement || !roleElement) {
-        console.warn("Dashboard elements not found. Skipping update.");
+    if (nameElement && contactElement) {
+        nameElement.textContent = user.company_name || "Tech Inc";
+        contactElement.textContent =  user.contact_name || "Jane Doe";
+    }
+    
+    // Only redirect if essential user properties are missing
+    if (!user.user_id) {
+        console.warn("No user_id found in user object");
+        window.location.href = "ai-resume-frontend-v2/pages/employers-signin.html";
         return;
     }
-
-    // First, try to update from localStorage
-    if (user) {
-        nameElement.textContent = user.company_name || "John Doe";
-        roleElement.textContent = user.user_role || "Employer";
+    
+    // Log token missing but don't redirect
+    if (!user.token) {
+        console.warn("No token found in user object");
     }
-
-    // If user data is missing or incomplete, fetch from API
-    if (!user || !user.user_id || !user.token) {
-        console.warn("User not found in localStorage. Redirecting to login...");
-        window.location.href = "../pages/employers-signin.html"; // Redirect if user is missing
-        return;
-    }
-
 }
 
 
