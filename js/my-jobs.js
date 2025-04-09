@@ -91,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const data = await response.json();
             let saved_Jobs = data.saved_jobs || [];
+            localStorage.setItem("savedJobs", JSON.stringify(savedJobs));
 
             const savedJobsCount = saved_Jobs.length;
 
@@ -416,32 +417,25 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Remove a saved job
-    async function removeSavedJob(jobId) {
+    function removeSavedJob(jobId) {
         try {
-            const user = JSON.parse(localStorage.getItem("user"));
-            if (!user || !user.user_id) {
-                showToast("Please sign in to remove saved jobs.", "error");
-                return;
-            }
-
-            const response = await fetch(`${apiEndpoints.removeSavedJob}/${jobId}`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Token ${user.token}`
-                }
-            });
-
-            if (!response.ok) throw new Error("Failed to remove saved job.");
-
-            // Update the UI
+            // Get saved jobs from memory or localStorage
             savedJobs = savedJobs.filter(job => job.id !== jobId);
+    
+            // Optionally also update localStorage if you’re storing there
+            const existing = JSON.parse(localStorage.getItem("savedJobs")) || [];
+            const updated = existing.filter(job => job.id !== jobId);
+            localStorage.setItem("savedJobs", JSON.stringify(updated));
+    
+            // Refresh UI
             loadSavedJobs();
             showToast('Job removed from saved list', 'success');
         } catch (error) {
+            console.error("Error removing saved job:", error);
             showToast('Failed to remove job. Please try again.', 'error');
         }
     }
+
 
     // Show toast notification
     function showToast(message, type = '') {
