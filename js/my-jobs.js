@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!app.job_details) {
                     return {
                         id: app.saved_job_id,
-                        job_id: app.job_id,
+                        job_id: app.job_details.job_id,
                         title: "Application in Process",
                         company_name: "Not specified",
                         city: "Not specified",
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 return {
                     id: app.saved_job_id,
-                    job_id: app.job_id,
+                    job_id: app.job_details.job_id,
                     title: app.job_details.title || "No Title",
                     company_name: app.job_details.company_name || "Not specified",
                     city: app.job_details.city || "Not specified",
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!app.job_details) {
                     return {
                         id: app.application_id,
-                        job_id: app.job_id,
+                        job_id: app.job_details.job_id,
                         title: "Application in Process",
                         company_name: "Not specified",
                         city: "Not specified",
@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 return {
                     id: app.application_id,
-                    job_id: app.job_id,
+                    job_id: app.job_details.job_id,
                     title: app.job_details.title || "No Title",
                     company_name: app.job_details.company_name || "Not specified",
                     city: app.job_details.city || "Not specified",
@@ -397,7 +397,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 window.location.href = `../pages/jobseeker-browse-jobs.html?jobId=${job.job_id}`;
             };
             removeSavedButton.onclick = () => {
-                removeSavedJob(job.id);
+                removeSavedJob(job.job_id);
                 closeJobModal();
             };
         } else {
@@ -417,25 +417,35 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Remove a saved job
-    function removeSavedJob(jobId) {
+    async function removeSavedJob(jobId) {
         try {
-            // Get saved jobs from memory or localStorage
+            const user = JSON.parse(localStorage.getItem("user"));
+            if (!user || !user.user_id) {
+                showToast("Please sign in to remove saved jobs.", "error");
+                return;
+            }
+
+            const response = await fetch(`${apiEndpoints.removeSavedJob}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Token ${user.token}`
+                },
+                body: JSON.stringify({  job_id: jobId, user_id: user.user_id })
+            });
+
+            if (!response.ok) throw new Error("Failed to remove saved job.");
+
+            // Update the UI
             savedJobs = savedJobs.filter(job => job.id !== jobId);
-    
-            // Optionally also update localStorage if you’re storing there
-            const existing = JSON.parse(localStorage.getItem("savedJobs")) || [];
-            const updated = existing.filter(job => job.id !== jobId);
-            localStorage.setItem("savedJobs", JSON.stringify(updated));
-    
-            // Refresh UI
             loadSavedJobs();
+            location.reload();
             showToast('Job removed from saved list', 'success');
         } catch (error) {
             console.error("Error removing saved job:", error);
             showToast('Failed to remove job. Please try again.', 'error');
         }
     }
-
 
     // Show toast notification
     function showToast(message, type = '') {
