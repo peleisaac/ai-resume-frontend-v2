@@ -379,7 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
            
            if (data.status_code === "AR00") {
-            showToast(data.message)
+            showToast("Job application sent successfully!", "success");
            } else {
             showToast(data.message)
            }
