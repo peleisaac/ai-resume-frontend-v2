@@ -133,7 +133,7 @@ function renderJobs() {
                 ${job.shortDescription}
             </div>
             <div class="job-tags">
-                ${job.required_skills.map(skill => `<span class="job-tag">${skill}</span>`).join('')}
+                ${job.required_skills.map(skill => `<span class="skill job-tag">${skill}</span>`).join('')}
             </div>
             <div class="posted-date">Posted ${timeAgo}</div>
         </div>
