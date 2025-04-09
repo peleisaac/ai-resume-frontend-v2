@@ -381,7 +381,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <h3>Required Skills</h3>
                     <div class="job-tags">
                     ${Array.isArray(job.required_skills) && job.required_skills.length ?
-                    job.required_skills.map(skill => `<span class="job-tag">${skill}</span>`).join('') :
+                    job.required_skills.map(skill => `<span class="skill job-tag">${skill}</span>`).join('') :
                     'Not specified'}
                     </div>
                 </div>
