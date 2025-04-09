@@ -105,7 +105,7 @@ async function fetchUserDetails() {
     
     if (!user) {
         console.warn("No user object found in localStorage");
-        window.location.href = "../pages/employers-signin.html";
+        window.location.href = "ai-resume-frontend-v2/pages/employers-signin.html";
         return;
     }
     
