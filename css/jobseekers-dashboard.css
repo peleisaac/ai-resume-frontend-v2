@@ -307,7 +307,17 @@ body {
   gap: 12px;
   margin-bottom: 16px;
 }
-
+.job-tags .skill{
+  color: var(--text-medium);
+  background-color: var(--bg-light);
+  padding: 4px 10px;
+  border-radius: 10px;
+}
+.job-wrapper{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 .company-logo {
   width: 48px;
   height: 48px;
