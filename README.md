@@ -61,9 +61,10 @@ In terms of security, we prioritize security to protect users’ sensitive infor
 
 
 ## Refined Epics to User Stories to Tasks
-Find below the evidence of refined epics to User Stories to Tasks
+In defining our epics, user stories and tasks, Jira was chosen for this task. Find below the evidence of refined epics to User Stories to Tasks using Jira where epics were refined to user stories and user stories were broken down into tasks to be completed.
 
 ![Screenshot of Refined epics](assets/refined_epics.png)
+![Screenshot of Refined epics](assets/refined_epics_two.png)
 
 
 ## Features 
