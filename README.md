@@ -30,10 +30,33 @@ In terms of security, we prioritize security to protect users’ sensitive infor
 ![Screenshot of the Landing page](https://github.com/peleisaac/ai-resume-frontend-v2/blob/main/assets/landing-page-image.png)
 
 ## Table of Contents
-
+- [User stories](#user-stories)
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Setup Instructions](#setup-instructions)
+
+
+## User Stories
+### Job Seeker User Stories
+- As a job seeker, I want to upload my resume so that I can be matched with relevant job opportunities.
+
+- As a job seeker, I want to see a list of jobs so that I can quickly find jobs or filter for jobs I can apply for.
+
+- As a job seeker, I want to save jobs I’m interested in so that I can apply later.
+
+- As a job seeker, I want my personal data to be protected and only shared with employers when I give consent.
+
+### Employer User Stories
+- As an employer, I want to post job openings so that I can attract qualified candidates and also edit jobs I have already posted.
+
+- As an employer, I want to search for candidates based on their uploaded resumes and skills so that I can find the best match for my job roles.
+
+- As an employer, I want to view matched candidates for a job opening so that I can quickly shortlist potential hires.
+
+- As an employer, I want to view analytics and insights on the number of applications and matched candidates for my posted jobs.
+
+- As an employer, I want to update the status of candidates who applied for a job.
+
 
 ## Features 
 - Clean and modern UI for resume uploads
