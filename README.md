@@ -11,19 +11,19 @@ By focusing on these two target audiences, our platform bridges the gap between 
 
 In terms of security, we prioritize security to protect users’ sensitive information and ensure a trustworthy experience. Key security features include:
 
-- HTTPS: Secure data transmission via SSL/TLS.
+- HTTPS: Ensuring secure data transmission via SSL/TLS.
 
-- Authentication/Authorization: Use secure login flows (JWT, OAuth).
+- Authentication/Authorization: Using secure login flows using Token based Authentication.
 
-- Input Validation: Sanitize user inputs to prevent injection.
+- Input Validation: Sanitizing user inputs to prevent injection.
 
-- XSS Protection: Escape dynamic content; apply CSP headers.
+- XSS Protection: Escaping dynamic content and applying CSP headers.
 
-- CSRF Protection: Use anti-CSRF tokens for sensitive operations.
+- CSRF Protection: Using anti-CSRF tokens for sensitive operations.
 
-- Secure File Uploads: Limit file types and size.
+- Secure File Uploads: Limiting file types and size in Resume uploads.
 
-- Dependency Updates: Keep frontend libraries up to date.
+- Dependency Updates: Keeping frontend libraries up to date.
 
 - User Privacy: Clear data handling notices and compliance.
 
