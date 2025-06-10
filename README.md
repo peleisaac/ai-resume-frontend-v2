@@ -98,6 +98,20 @@ This link routes you to the initial design (Wireframes) used for the development
 
 3. **Open the project in a browser**: Simply open index.html in your preferred browser
 
+## Manual Testing
+Manual testing was performed on the developed frontend and below is a sample checklist of the testing performed manually:
+✅ Users fill out forms and submit them without errors
+
+✅ Form validation messages clear
+
+✅ Dropdowns and modals work as expected
+
+✅ The layout adjust to mobile/desktop screens
+
+✅ The API errors shows clearly (e.g., “Failed to fetch jobs”)
+
+✅ The sensitive data are stored securely (e.g., user account data is stored in localstorage only whenn user is authenticated successfully)
+
 ## Validator Testing
     ### Project Validation from the Official W3C Validator
    ![Screenshot of the Official W3C Validator](https://github.com/peleisaac/ai-resume-frontend-v2/blob/main/assets/w3schools-validator.png)
