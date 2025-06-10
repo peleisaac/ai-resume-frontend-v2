@@ -32,6 +32,7 @@ In terms of security, we prioritize security to protect users’ sensitive infor
 ## Table of Contents
 - [User stories](#user-stories)
 - [Features](#features)
+- [Wireframes](#wireframes)
 - [Technologies Used](#technologies-used)
 - [Setup Instructions](#setup-instructions)
 
@@ -64,6 +65,9 @@ In terms of security, we prioritize security to protect users’ sensitive infor
 - Simple and lightweight interface
 - Easy customization with CSS
 - Clean and intuitive dashboards for Jobseekers and Employers
+
+## Wireframes
+This link routes you to the initial design (Wireframes) used for the development of the frontend: [UI Link](https://www.figma.com/design/0MprAOSLilpKR2YGMgiwKr/JOB-APP?node-id=0-1&p=f&t=7t4SQqRJaZIMDZr4-0)
 
 
 ## Technologies Used
