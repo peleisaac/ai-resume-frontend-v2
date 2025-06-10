@@ -31,6 +31,7 @@ In terms of security, we prioritize security to protect users’ sensitive infor
 
 ## Table of Contents
 - [User stories](#user-stories)
+- [Refined epics to User stories to tasks](#refined-epics)
 - [Features](#features)
 - [Wireframes](#wireframes)
 - [Technologies Used](#technologies-used)
@@ -57,6 +58,12 @@ In terms of security, we prioritize security to protect users’ sensitive infor
 - As an employer, I want to view analytics and insights on the number of applications and matched candidates for my posted jobs.
 
 - As an employer, I want to update the status of candidates who applied for a job.
+
+
+## Refined Epics to User Stories to Tasks
+Find below the evidence of refined epics to User Stories to Tasks
+
+![Screenshot of Refined epics](assets/refined_epics.png)
 
 
 ## Features 
