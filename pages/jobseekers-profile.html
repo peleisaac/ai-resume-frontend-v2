@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jobseeker Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="../css/profiles.css">
     <link rel="stylesheet" href="../css/header.css">
     <link rel="stylesheet" href="../css/footer.css">
@@ -101,6 +102,8 @@
     <div id="footer"></div>
     <script src="../context/constants/apiEndpoints.js"></script>
     <script type="module">
+
+
         function validatePhoneNumber(input) {
             // Remove any non-digit characters
             input.value = input.value.replace(/\D/g, '');
@@ -130,6 +133,7 @@
                 });
 
                 const data = await response.json();
+                console.log("DATA (formatted):", JSON.stringify(data, null, 2));
 
                 if (response.ok) {
                     // Populate the form fields
@@ -142,6 +146,9 @@
                     document.getElementById("city").value = data.user.city || "";
                     document.getElementById("phone-number").value = data.user.msisdn || "";
                     document.getElementById("website").value = data.user.socials || "";
+
+
+
                     const jobNotificationCheckBox = document.getElementById("job-notifications")
                     const jobValue = data.user.job_notifications;
 
@@ -175,7 +182,7 @@
                 }
             } catch (error) {
                 console.error("Error fetching user details:", error);
-                alert(error.message);
+                Toast.error(error.message);
             }
         });
 
@@ -200,7 +207,6 @@
                     category_of_interest: getSelectedCategories(),
                     user_role: "jobseeker",
                     profile_complete: true,
-
                 };
 
                 console.log("Updating profile:", formData); // Debugging
@@ -210,28 +216,33 @@
                 try {
                     const response = await fetch(
                         `${apiEndpoints.updateUser}/${user.user_id}`,
-                        {                        
+                        {
                             method: "PUT",
                             headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Token ${user?.token}` // Assuming token is stored in localStorage
-                        },
-                        body: JSON.stringify(formData)
-                    });
+                                "Content-Type": "application/json",
+                                Authorization: `Token ${user?.token}` // Assuming token is stored in localStorage
+                            },
+                            body: JSON.stringify(formData)
+                        });
 
                     const data = await response.json();
 
                     if (response.ok) {
                         user.profile_complete = true;
                         localStorage.setItem("user", JSON.stringify(user));
-                        alert("Profile updated successfully!");
-                        window.location.href = "/ai-resume-frontend-v2/pages/upload_cv.html"; // Redirect to CV upload page
-                    } else {
-                        throw new Error(data.message || "Profile update failed");
+
+                        Toast.success(`${data.message || "Profile updated successfully"}`);
+                        setTimeout(() => {
+                            window.location.href = "/pages/upload_cv.html"; // Redirect to CV upload page
+                        }, 2000);
+                    }
+                    else {
+                        Toast.error(data.message || "Profile update failed");
+
                     }
                 } catch (error) {
                     console.error("Error updating profile:", error);
-                    alert(error.message);
+                    Toast.error(error.message);
                 }
             });
 
@@ -252,9 +263,13 @@
 
         });
     </script>
+
     <script src="../js/header.js"></script>
     <script src="../js/footer.js"></script>
     <script src="../js/categories.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="../context/constants/toast.js"></script>
 </body>
 
 </html>

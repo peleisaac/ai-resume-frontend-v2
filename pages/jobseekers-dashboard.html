@@ -11,6 +11,13 @@
 
 <body data-role="jobseeker">
     <div class="dashboard-container">
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" title="Open mobile menu" aria-label="Open mobile menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 12H21M3 6H21M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+        </button>
         <!-- Sidebar Navigation -->
         <div id="sidebar"></div>
 
@@ -210,17 +217,17 @@
             </div>
         </main>
     </div>
-    
-    <script src="../context/constants/apiEndpoints.js"></script>
     <script src="../js/jobseeker-sidebar.js"></script>
     <script src="../js/jobseeker-dashboard.js"></script>
-    
+    <script src="../context/constants/apiEndpoints.js"></script>
+
     <script type="module">
-        
+
         document.addEventListener("DOMContentLoaded", function () {
             const user = JSON.parse(localStorage.getItem("user"));
+
             if (!user || !user.token) {
-                console.error("User not logged in or token missing");
+                console.error("User or token missing for dashboard metrics");
                 return;
             }
             fetch(`${apiEndpoints.jobseekerDashboardMetrics}`, {
@@ -247,8 +254,9 @@
                 })
                 .catch(error => console.error("Error fetching metrics:", error));
         });
+
     </script>
-    
+
 
 </body>
 

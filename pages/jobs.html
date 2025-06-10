@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Available Jobs | AI Resume Screening</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="../css/button.css">
     <link rel="stylesheet" href="../css/header.css">
     <link rel="stylesheet" href="../css/footer.css">
     <link rel="stylesheet" href="../css/jobs.css">
 </head>
+
 <body>
     <!-- Dynamic Header -->
     <div id="header"></div>
@@ -26,32 +29,16 @@
                 <div class="filter-group">
                     <label for="location">Location</label>
                     <select id="location">
-                        <option value="">All Locations</option>
-                        <option value="remote">Remote</option>
-                        <option value="new-york">New York</option>
-                        <option value="san-francisco">San Francisco</option>
-                        <option value="london">London</option>
-                        <option value="tokyo">Tokyo</option>
                     </select>
                 </div>
                 <div class="filter-group">
                     <label for="job-type">Job Type</label>
                     <select id="job-type">
-                        <option value="">All Types</option>
-                        <option value="full-time">Full-Time</option>
-                        <option value="part-time">Part-Time</option>
-                        <option value="contract">Contract</option>
-                        <option value="internship">Internship</option>
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label for="experience">Experience</label>
-                    <select id="experience">
-                        <option value="">All Levels</option>
-                        <option value="entry">Entry Level</option>
-                        <option value="mid">Mid Level</option>
-                        <option value="senior">Senior Level</option>
-                        <option value="executive">Executive</option>
+                    <label for="category">Category</label>
+                    <select id="category">
                     </select>
                 </div>
                 <button id="filter-btn" class="btn secondary-blue">Apply Filters</button>
@@ -99,6 +86,13 @@
     <script src="../js/header.js"></script>
     <script src="../js/footer.js"></script>
     <script src="../js/navigation.js"></script>
+    <script src="/context/constants/apiEndpoints.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="../context/constants/toast.js"></script>
+    <script src="../js/jobService.js"></script>
     <script src="../js/jobs.js"></script>
+
 </body>
+
 </html>

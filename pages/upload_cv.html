@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Your CV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="../css/header.css">
     <link rel="stylesheet" href="../css/footer.css">
     <link rel="stylesheet" href="../css/cv_upload.css">
@@ -29,7 +30,8 @@
             <div id="success-section" class="success-message">
                 <p>Your CV was successfully uploaded. Thanks for completing your profile.</p>
                 <p>You can now apply to jobs of your choice.</p>
-                <button class="cv_btn" onclick="window.location.href = '../pages/jobseekers-dashboard.html'">GO TO HOME</button>
+                <button class="cv_btn" onclick="window.location.href = '../pages/jobseekers-dashboard.html'">GO TO
+                    HOME</button>
             </div>
         </div>
     </div>
@@ -41,7 +43,9 @@
     <script src="../js/footer.js"></script>
     <script type="module" src="../js/uploadFile.js"></script>
     <script src="../context/constants/apiEndpoints.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="../context/constants/toast.js"></script>
 
 </body>
 
