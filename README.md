@@ -1,5 +1,31 @@
-# AI Resume frontend
+# AI Resume Project - Frontend
 The AI Resume Application is a web-based project built using HTML, CSS and JavaScript. It provides an intuitive user interface to upload, view, and manage resumes according to skills, interest and strength. The application ensures a visually appealing and responsive layout, making it easy for users to interact with their resumes.
+
+Our AI resume project is designed to meet the needs of two main target audiences: job seekers and employers.
+
+For job seekers, the platform streamlines the process of finding relevant job opportunities. By uploading their resumes, job seekers receive personalized job matches tailored to their skills, experience, and preferences—reducing the time and effort needed to search for opportunities manually. This directly addresses their need for quick, accurate, and relevant job matching, increasing their chances of finding the right role faster.
+
+For employers, the platform provides access to a pool of qualified candidates that match their job requirements. Using AI algorithms, the system analyzes candidate profiles and resumes to highlight the best fits for a given role. This saves employers time in the recruitment process and helps them find candidates whose skills align with their specific needs.
+
+By focusing on these two target audiences, our platform bridges the gap between job seekers and employers—offering a smarter, data-driven approach to recruitment and job discovery.
+
+In terms of security, we prioritize security to protect users’ sensitive information and ensure a trustworthy experience. Key security features include:
+
+- HTTPS: Secure data transmission via SSL/TLS.
+
+- Authentication/Authorization: Use secure login flows (JWT, OAuth).
+
+- Input Validation: Sanitize user inputs to prevent injection.
+
+- XSS Protection: Escape dynamic content; apply CSP headers.
+
+- CSRF Protection: Use anti-CSRF tokens for sensitive operations.
+
+- Secure File Uploads: Limit file types and size.
+
+- Dependency Updates: Keep frontend libraries up to date.
+
+- User Privacy: Clear data handling notices and compliance.
 
 ![Screenshot of the Landing page](https://github.com/peleisaac/ai-resume-frontend-v2/blob/main/assets/landing-page-image.png)
 
