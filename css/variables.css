@@ -1,6 +1,7 @@
 :root {
     /* 🎨 Color Variables */
     --primary-color: #2563eb; /* Blue */
+    --light-blue-color: #60769b; /* Lighter Blue */
     --secondary-color: #1e40af; /* Darker Blue */
     --white-color: white;
     --black-color: black;
