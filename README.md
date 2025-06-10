@@ -44,3 +44,11 @@ The AI Resume Application is a web-based project built using HTML, CSS and JavaS
     ### Project Validation from the Official Jigsaw Validator
    ![Screenshot of the Official Jigsaw Validator](https://github.com/peleisaac/ai-resume-frontend-v2/blob/main/assets/jigsaw-validator.png)
 
+## Deployment Procedure
+This project was deployed using Github Pages and the steps taken to accomplish that are as follows:
+
+    - I navigated to settings > Pages.
+    - Under Source, I selected the main branch as the branch I wanted to deploy.
+    - I clicked on "Save" after selecting the branch.
+    - GitHub generated a link for my site found here: [Project Link]([https://peleisaac.github.io/ai-resume-frontend-v2/](https://peleisaac.github.io/ai-resume-frontend-v2/)).
+
