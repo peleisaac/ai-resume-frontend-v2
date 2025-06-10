@@ -1,18 +1,26 @@
+// import { apiEndpoints } from "../context/constants/apiEndpoints.js";
 import { handleApiResponse } from "./handleApiResponse.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Get user role from the body tag
-    const userRole = document.body.getAttribute("data-role") || "jobseeker";
+  // Get user role from the body tag
+  const userRole = document.body.getAttribute("data-role") || "jobseeker";
 
-    // Function to load the sign-in form
-    function loadSignInForm(type) {
-        const pageTitle = type === "employer" ? "EMPLOYERS SIGN IN" : "JOBSEEKERS SIGN IN";
-        const switchText = type === "employer" ? "Are you a Jobseeker?" : "Are you an Employer?";
-        const switchPath = type === "employer" ? "jobseekers-signin.html" : "employers-signin.html";
-        const signUpPath = type === "employer" ? "employers-signup.html" : "jobseekers-signup.html";
-        const profilePath = type === "employer" ? "employers-profile.html" : "jobseekers-profile.html";
+  // Function to load the sign-in form
+  function loadSignInForm(type) {
+    const pageTitle =
+      type === "employer" ? "EMPLOYERS SIGN IN" : "JOBSEEKERS SIGN IN";
+    const switchText =
+      type === "employer" ? "Are you a Jobseeker?" : "Are you an Employer?";
+    const switchPath =
+      type === "employer" ? "jobseekers-signin.html" : "employers-signin.html";
+    const signUpPath =
+      type === "employer" ? "employers-signup.html" : "jobseekers-signup.html";
+    const profilePath =
+      type === "employer"
+        ? "employers-profile.html"
+        : "jobseekers-profile.html";
 
-        return `
+    return `
             <form id="signin-form">
                 <div>
                     <h2 class="title">${pageTitle}</h2>
@@ -36,132 +44,165 @@ document.addEventListener("DOMContentLoaded", function () {
                 <button onclick="location.href='${switchPath}'" class="secondary-btn">SIGN IN HERE</button>
             </div>
         `;
+  }
+
+  // Inject the form into the page
+  const authContainer = document.getElementById("auth-container");
+  if (authContainer) {
+    authContainer.innerHTML = loadSignInForm(userRole);
+
+    // Attach event listener for form submission
+    const form = document.getElementById("signin-form");
+    if (form) {
+      form.addEventListener("submit", handleSignIn);
+    }
+  }
+
+  // Sign-in form submission handler
+  function handleSignIn(event) {
+    event.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const errorMessage = document.getElementById("error-message");
+
+    errorMessage.textContent = "";
+
+    if (!email || !password) {
+      errorMessage.textContent = "All fields are required.";
+      return;
     }
 
-    // Inject the form into the page
-    const authContainer = document.getElementById("auth-container");
-    if (authContainer) {
-        authContainer.innerHTML = loadSignInForm(userRole);
+    const data = {
+      email: email,
+      password: password,
+      user_role: userRole,
+    };
 
-        // Attach event listener for form submission
-        const form = document.getElementById("signin-form");
-        if (form) {
-            form.addEventListener("submit", handleSignIn);
-        }
-    }
+    console.log("Sending login request with data:", data);
 
-    // Sign-in form submission handler
-    function handleSignIn(event) {
-        event.preventDefault();
+    fetch(`${apiEndpoints.login}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(data),
+      mode: "cors",
+    })
+      .then((response) => response.json())
+      .then((responseData) => {
+        console.log("Login response:", responseData);
+        const result = handleApiResponse(
+          responseData.status_code,
+          responseData.data
+        );
+        console.log("Processed login result:", result);
 
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value.trim();
-        const errorMessage = document.getElementById("error-message");
+        if (result.success) {
+          Toast.success(`${responseData.message}`);
+          // Store user data in localStorage
+          localStorage.setItem("user", JSON.stringify(result.data));
 
-        errorMessage.textContent = "";
+          // Get the userId from the login response
+          const userId = result.data.user_id;
 
-        if (!email || !password) {
-            errorMessage.textContent = "All fields are required.";
-            return;
-        }
-
-        const data = {
-            email: email,
-            password: password,
-            user_role: userRole,
-        };
-
-        console.log("Sending login request with data:", data);
-
-       fetch(`${apiEndpoints.login}`, {
-            method: "POST",
+          // Make a request to the users endpoint to check profile completion status
+          return fetch(`${apiEndpoints.user}/${userId}`, {
+            method: "GET",
             headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: `Token ${result.data.token}`,
             },
-            body: JSON.stringify(data),
-            mode: "cors"
-        })
-            .then(response => response.json())
-            .then(responseData => {
-                console.log("Login response:", responseData);
-                const result = handleApiResponse(responseData.status_code, responseData.data);
-                console.log("Processed login result:", result);
-
-                if (result.success) {
-                    // Store user data in localStorage
-                    localStorage.setItem("user", JSON.stringify(result.data));
-
-                    // Get the userId from the login response
-                    const userId = result.data.user_id;
-                    console.log("User ID:", userId);
-                    console.log("Auth token:", result.data.token);
-
-                    // Make a request to the users endpoint to check profile completion status
-                    return fetch(`${apiEndpoints.user}/${userId}`, {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Accept": "application/json",
-                            Authorization: `Token ${result.data.token}`
-                        },
-                        mode: "cors"
-                    })
-                        .then(profileResponse => {
-                            console.log("Profile response status:", profileResponse.status);
-                            return profileResponse.json();
-                        })
-                        .then(profileData => {
-                            console.log("Profile data:", profileData);
-
-                            // Log the specific user object structure
-                            if (profileData.user) {
-                                console.log("User object:", JSON.stringify(profileData.user, null, 2));
-                                console.log("Profile complete value:", profileData.user.profile_complete);
-                            } else {
-                                console.log("No user object found in response");
-                            }
-
-                            // Use handleApiResponse for consistent error handling
-                            const profileResult = handleApiResponse(profileData.status_code, profileData.user);
-                            console.log("Processed profile result:", profileResult);
-
-                            // Check if profile fetch was successful
-                            if (profileResult.success && profileResult.data) {
-                                const profileCompleted = profileResult.data.profile_complete === true;
-                                console.log("Profile completed status:", profileCompleted);
-
-                                // Redirect based on profile completion status
-                                if (profileCompleted) {
-                                    console.log("Redirecting to dashboard");
-                                    window.location.href = userRole === "employer" ? "employer-dashboard.html" : "jobseekers-dashboard.html";
-                                } else {
-                                    console.log("Redirecting to profile - incomplete profile");
-                                    window.location.href = userRole === "employer" ? "employers-profile.html" : "jobseekers-profile.html";
-                                }
-                            } else {
-                                console.log("Profile data issue, redirecting to profile page");
-                                window.location.href = userRole === "employer" ? "employers-profile.html" : "jobseekers-profile.html";
-                                alert(profileResult.message);
-                            }
-                        })
-                        .catch(profileError => {
-                            console.error("Profile fetch error:", profileError);
-                            window.location.href = userRole === "employer" ? "employers-profile.html" : "jobseekers-profile.html";
-                        });
-                } else {
-                    document.getElementById("email").value = "";
-                    document.getElementById("password").value = "";
-                    errorMessage.textContent = responseData.message || result.message;
-                }
+            mode: "cors",
+          })
+            .then((profileResponse) => {
+              console.log("Profile response status:", profileResponse.status);
+              return profileResponse.json();
             })
-            .catch(error => {
-                console.error("Login error:", error);
+            .then((profileData) => {
+              console.log("Profile data:", profileData);
 
-                document.getElementById("email").value = "";
-                document.getElementById("password").value = "";
+              // Log the specific user object structure
+              if (profileData.user) {
+                console.log(
+                  "User object:",
+                  JSON.stringify(profileData.user, null, 2)
+                );
+                console.log(
+                  "Profile complete value:",
+                  profileData.user.profile_complete
+                );
+              } else {
+                console.log("No user object found in response");
+              }
 
-                errorMessage.textContent = "An error occurred. Please try again.";
+              // Use handleApiResponse for consistent error handling
+              const profileResult = handleApiResponse(
+                profileData.status_code,
+                profileData.user
+              );
+
+              console.log("Processed profile result:", profileResult);
+
+              // Check if profile fetch was successful
+              if (profileResult.success && profileResult.data) {
+                const profileCompleted =
+                  profileResult.data.profile_complete === true;
+                console.log("Profile completed status:", profileCompleted);
+                Toast.success(`${profileResult.message}`);
+
+                // Redirect based on profile completion status
+                if (profileCompleted) {
+                  console.log("Redirecting to dashboard");
+                  Toast.success("Redirecting to dashboard");
+                  window.location.href =
+                    userRole === "employer"
+                      ? "employer-dashboard.html"
+                      : "jobseekers-dashboard.html";
+                } else {
+                  console.log("Redirecting to profile - incomplete profile");
+                  Toast.error("Redirecting to profile - incomplete profile");
+                  window.location.href =
+                    userRole === "employer"
+                      ? "employers-profile.html"
+                      : "jobseekers-profile.html";
+                }
+              } else {
+                console.log("Profile data issue, redirecting to profile page");
+                Toast.error("Profile data issue, redirecting to profile page");
+                window.location.href =
+                  userRole === "employer"
+                    ? "employers-profile.html"
+                    : "jobseekers-profile.html";
+                Toast.error(profileResult.message);
+              }
+            })
+            .catch((profileError) => {
+              Toast.error("Profile fetch error:", profileError);
+              console.error("Profile fetch error:", profileError);
+              // If there's an error fetching the profile, redirect to profile page
+              window.location.href =
+                userRole === "employer"
+                  ? "employers-profile.html"
+                  : "jobseekers-profile.html";
             });
-    }
+        } else {
+          document.getElementById("email").value = "";
+          document.getElementById("password").value = "";
+          Toast.error(`${responseData.non_field_errors}`);
+          errorMessage.textContent = responseData.message || result.message;
+        }
+      })
+      .catch((error) => {
+        console.error("Login error:", error);
+        Toast.error(`${error.message}`);
+
+        document.getElementById("email").value = "";
+        document.getElementById("password").value = "";
+
+        errorMessage.textContent = "An error occurred. Please try again.";
+      });
+  }
 });

@@ -1,3 +1,8 @@
+// Function for redirecting home
+// function goHome() {
+//   window.location.href = "../pages/jobseekers-dashboard.html"; // Redirect to home page
+// }
+
 document.addEventListener("DOMContentLoaded", function () {
   const fileInput = document.getElementById("cv-upload");
   const uploadButton = document.querySelector(".cv_btn");
@@ -9,7 +14,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const file = fileInput.files[0];
-    const allowedTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
     const maxSize = 10 * 1024 * 1024; // 10MB
 
     // Validate file type
@@ -31,20 +40,23 @@ document.addEventListener("DOMContentLoaded", function () {
     const user = JSON.parse(localStorage.getItem("user"));
 
     try {
-      const response = await fetch(`${apiEndpoints.resumeUpload}/${user.user_id}/resume/upload`, {
-        method: "POST",
-        headers: {
-          "Authorization": `Token ${user?.token}` // Ensure authentication
-        },
-        body: formData
-      });
+      const response = await fetch(
+        `${apiEndpoints.resumeUpload}/${user.user_id}/resume/upload`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Token ${user?.token}`, // Ensure authentication
+          },
+          body: formData,
+        }
+      );
 
       const result = await response.json();
       console.log("CV Upload Response:", result); // Debugging
 
       if (response.ok) {
         // localStorage.setItem("user", JSON.stringify(result.user_details));
-
+        Toast.success(`${result.message}`);
         // Hide upload section and show success message
         document.getElementById("upload-section").classList.remove("active");
         document.getElementById("success-section").classList.add("active");
@@ -54,11 +66,11 @@ document.addEventListener("DOMContentLoaded", function () {
           window.location.href = "../pages/jobseekers-dashboard.html";
         }, 3000);
       } else {
-        alert(`Upload failed: ${result.message}`);
+        Toast.error(`Upload failed: ${result.message}`);
       }
     } catch (error) {
       console.error("Error uploading CV:", error);
-      alert("Error uploading CV:. Please try again.");
+      alert("An error occurred. Please try again.");
     }
   });
 });
