@@ -100,6 +100,7 @@ This link routes you to the initial design (Wireframes) used for the development
 
 ## Manual Testing
 Manual testing was performed on the developed frontend and below is a sample checklist of the testing performed manually:
+
 ✅ Users fill out forms and submit them without errors
 
 ✅ Form validation messages clear
