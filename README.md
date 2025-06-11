@@ -36,6 +36,9 @@ In terms of security, we prioritize security to protect users’ sensitive infor
 - [Wireframes](#wireframes)
 - [Technologies Used](#technologies-used)
 - [Setup Instructions](#setup-instructions)
+- [Manual Testing](#manual-testing)
+- [Validator Testing](#validator-testing)
+- [Deployment Procedure](#deployment-procedure)
 
 
 ## User Stories
