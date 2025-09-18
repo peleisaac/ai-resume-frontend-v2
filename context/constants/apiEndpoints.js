@@ -1,4 +1,4 @@
-const baseUrl = "https://ai-resume-backend-v1.axxendcorp.com/api/v1";
+const baseUrl = "https://ai-resume-backend-v2.axxendcorp.com/api/v1";
 const apiEndpoints = {
   users: `${baseUrl}/users`,
   user: `${baseUrl}/users`,
